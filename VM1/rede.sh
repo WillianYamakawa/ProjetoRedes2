@@ -3,6 +3,10 @@
 IP_EXTERNO="IP_DA_VM1/PREFIXO"
 GATEWAY_EXTERNO="IP_DO_GATEWAY"
 
+if ! command -v iptables >/dev/null 2>&1; then
+    apt-get update && apt-get install -y iptables || exit 1
+fi
+
 service NetworkManager stop
 service networking stop
 ifconfig enp0s3 down

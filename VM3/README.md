@@ -25,10 +25,6 @@ A prática da Aula 08 usa o site `default-ssl`. Em `/etc/apache2/sites-available
 
 Depois de instalar o módulo PHP, coloque `teste-php.php` em `/var/www/html`. Abra `http://172.26.24.3/teste-php.php` no navegador e confira a mensagem “PHP em execução na VM3”. Remova o arquivo de teste após a verificação.
 
-## Pendente
-
-O Webmail aparece na VM3 no diagrama do plano (p. 3). A implementação depende do SMTP e do IMAP da VM4.
-
 ## Referências
 
 - Prática da Aula 08, itens 2 e 3, para Apache e HTTPS.

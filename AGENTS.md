@@ -6,6 +6,10 @@ O enunciado (p. 1–2) pedia dividir 172.26.N.0/24 em seis sub-redes, montar qua
 
 Os quatro scripts usam N=21. Os blocos atendem à capacidade solicitada: Rede 1 em 172.26.21.240/28, Rede 2 em 172.26.21.192/27, Rede 3 em 172.26.21.224/28, Rede 4 em 172.26.21.0/25, Rede 5 em 172.26.21.128/27 e Rede 6 em 172.26.21.160/27. A VM1 liga a Rede 1 à rede externa com SNAT. Pela Rede 1, a VM2 liga as Redes 2 e 3, a VM3 liga a Rede 4 e a VM4 liga as Redes 5 e 6. Os scripts configuram IPs e rotas estáticas e ativam o encaminhamento IPv4 nos quatro gateways. O IP externo da VM1 ficou com um marcador e o gateway registrado é o do ambiente anterior. O material disponível contém os quatro scripts de gateway. A configuração das VMs clientes e os testes não puderam ser verificados a partir desses arquivos.
 
+## Escopo da entrega
+
+O grupo entregará a rede e os serviços já implementados. DHCP na VM2 e Webmail na VM3 estão fora do escopo desta entrega. Os clientes usam IP fixo e o correio é acessado por SMTP e IMAP.
+
 ## Redes 2 — configuração de rede
 
 Usar a appliance Linux do professor nas seis VMs. Montar três segmentos distintos no virtualizador, conforme o diagrama (p. 3): rede do laboratório, sub-rede A (172.26.24.0/25) e sub-rede B (172.26.24.128/25). Ligar apenas a interface externa da VM1 ao segmento do laboratório.

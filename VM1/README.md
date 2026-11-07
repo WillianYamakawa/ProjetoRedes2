@@ -2,7 +2,7 @@
 
 1. Confirme que a `enp0s3` está ligada à rede do laboratório e a `enp0s8` à sub-rede `172.26.24.0/25`. Se os nomes na appliance forem diferentes, ajuste as referências a essas interfaces no `rede.sh`.
 2. Edite o início do `rede.sh` antes de aplicar a configuração. Em `IP_EXTERNO`, informe o IPv4 atribuído à VM1 seguido de uma barra e do prefixo. Em `GATEWAY_EXTERNO`, informe o IPv4 do gateway do laboratório, sem prefixo. Mantenha as aspas nos dois valores.
-3. No console da VM1, entre como root com `su -` e aplique o `rede.sh`. Se for executar as linhas manualmente, cole também as duas atribuições de variáveis no mesmo terminal, antes dos demais comandos.
+3. No console da VM1, entre como root com `su -` e aplique o `rede.sh`. Se o `iptables` estiver ausente, o script o instala antes de alterar a rede. Na primeira execução, a VM precisa alcançar os repositórios do Debian. Se for executar as linhas manualmente, cole também as duas atribuições de variáveis no mesmo terminal, antes dos demais comandos.
 4. Aplique os arquivos de rede das VMs 2 a 6 nessa ordem. A configuração da VM1 limpa a tabela NAT. Aplique-a antes do firewall e do HTB.
 
 ## Firewall IPv4
@@ -15,7 +15,7 @@ O Squid usa FTP passivo por padrão. Abra uma nova sessão FTP depois de aplicar
 modprobe nf_conntrack_ftp
 modprobe nf_nat_ftp
 
-iptables -t raw -C PREROUTING -i enp0s8 -p tcp -s 172.26.24.131 --dport 21 -j CT --helper ftp ||
+iptables -t raw -C PREROUTING -i enp0s8 -p tcp -s 172.26.24.131 --dport 21 -j CT --helper ftp 2>/dev/null ||
 iptables -t raw -A PREROUTING -i enp0s8 -p tcp -s 172.26.24.131 --dport 21 -j CT --helper ftp
 
 iptables -P FORWARD DROP
