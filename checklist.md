@@ -21,14 +21,19 @@
 Usar os comandos de materiais_professor. Manter a rede em rede.sh e documentar os comandos de serviço no README.md de cada VM, com a ordem de execução, os arquivos a editar e o que alterar.
 
 - [ ] **VM1 — Firewall.** Aplicar bloqueio inicial e liberar ICMP entre redes internas e externa, acesso externo a HTTP/HTTPS, DNS e SMTP internos, consultas externas do DNS cache e acesso a HTTP/HTTPS e FTP externos somente pelo proxy.
+  - Regras documentadas no README. Em rede isolada no WSL, passaram 20 verificações de liberação e bloqueio, incluindo dois pings e verificação do SNAT. O canal de dados passivo foi acrescentado à configuração. O teste anterior cobriu a porta 21. Falta validar uma transferência pelo Squid na appliance.
 - [ ] **VM1 — Testar firewall.** Conferir os fluxos permitidos nos sentidos previstos e verificar o bloqueio dos demais, incluindo acesso direto de um cliente interno a Web e FTP externos.
 - [ ] **VM1 — HTB.** Configurar entrada de 50 MB/s (Web 25, FTP 15, demais 10) e saída de 20 MB/s (Web 10, SMTP 5, demais 5), conforme as restrições de compartilhamento do enunciado.
+  - Estrutura de classes aceita no WSL antes da inclusão dos filtros finais. A classificação de Web, FTP e SMTP está configurada no README. Falta aplicar e medir as taxas com tráfego simultâneo na appliance.
 - [ ] **VM1 — Testar HTB.** Medir as classes sob tráfego simultâneo e verificar que, na entrada, os demais fluxos não usam a sobra de Web ou FTP e, na saída, os demais fluxos não usam a sobra de Web.
 - [ ] **VM2 — DHCP.** Configurar o serviço indicado no diagrama e testar em um cliente a concessão de IP, máscara, gateway e DNS.
+  - O diagrama prevê o serviço. O material do repositório não inclui a prática de instalação e configuração do servidor DHCP.
 - [ ] **VM3 — HTTP, HTTPS e PHP.** Seguir o README na appliance e testar HTTP, HTTPS com certificado e execução de PHP.
 - [x] **VM3 — Testes no Debian Docker.** Validar HTTP, HTTPS com certificado de laboratório e execução de PHP a partir de um cliente da intranet.
 - [ ] **VM3 — Webmail.** Implementar e testar envio e leitura em integração com a VM4.
+  - O diagrama prevê o serviço. O material do repositório não inclui a prática de instalação e configuração do Webmail.
 - [ ] **VM4 — DNS.** Configurar as zonas direta e reversa de `trabalho202624.com.br` e habilitar o cache. Testar resolução direta e reversa na intranet e resolução externa pelo cache. Documentar o procedimento de registro no Registro.br.
+  - Debian 12 em Docker: 28 consultas A/PTR e dois testes de MX passaram nas sub-redes A e B. Com a diretiva de recursão, o teste isolado no WSL confirmou o cache nas duas sub-redes. Do segmento externo, o BIND respondeu à zona do projeto e recusou consultas recursivas e ao cache. Falta aplicar e validar na appliance com a VM1.
 - [x] **VM4 — SMTP e IMAP na appliance.** Configurar quatro caixas postais na Redes2-VM4 e validar envio SMTP, entrega e leitura por IMAP com TLS, com cliente de teste isolado na sub-rede A.
 - [x] **VM4 — Testes no Debian Docker.** Validar envio SMTP a partir da intranet e entrega e leitura por IMAP com TLS nas quatro caixas em Debian 12 e 13.
 - [x] **VM5 — Samba na appliance.** Configurar TRAB202624 e arquivos24 e validar a escrita dos dois editores e a leitura dos dois leitores, com escrita negada aos leitores, usando cliente de teste isolado na sub-rede B.

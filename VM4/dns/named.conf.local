@@ -1,0 +1,9 @@
+zone "trabalho202624.com.br" {
+    type master;
+    file "/etc/bind/db.trabalho202624.com.br";
+};
+
+zone "24.26.172.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.172.26.24";
+};

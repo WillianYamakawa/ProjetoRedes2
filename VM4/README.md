@@ -57,3 +57,55 @@ Envie de `correio1` para `correio2`, de `correio2` para `correio3`, de `correio3
 
 - Prática da Aula 06, item 2 para o Exim e procedimento de reinício do Dovecot. O enunciado pede IMAP, que é fornecido pelo pacote `dovecot-imapd`.
 - [Configuração do Exim no Debian](https://manpages.debian.org/bookworm/exim4-config/update-exim4.conf.8.en.html).
+
+## DNS direto, reverso e cache
+
+1. Na VM4, com a rede aplicada, instale o BIND9 como administrador.
+
+   ```sh
+   apt-get update
+   apt-get install bind9
+   ```
+
+2. Use os arquivos de [dns/](dns/) como modelo da prática da Aula 05. Edite `/etc/bind/named.conf.local` para incluir as duas zonas declaradas no modelo. Crie `/etc/bind/db.trabalho202624.com.br` e `/etc/bind/db.172.26.24` com o conteúdo dos respectivos modelos.
+3. Os registros iniciais cobrem as seis VMs. `vm2` identifica a interface da sub-rede A e `vm2-b` a da sub-rede B. Para cada cliente da intranet, adicione seu nome e IP como registro A e seu último octeto como registro PTR, seguindo os exemplos. Aumente o serial do arquivo de cada zona alterada.
+4. Em `/etc/bind/named.conf.options`, adicione a linha abaixo dentro do bloco `options { ... };`. Se já houver uma diretiva `allow-recursion` nesse bloco, atualize-a. Ela permite a recursão e o uso do cache nas duas sub-redes da intranet e no próprio servidor.
+
+   ```conf
+   allow-recursion { localhost; 172.26.24.0/25; 172.26.24.128/25; };
+   ```
+
+5. Pare e inicie o serviço conforme a prática.
+
+   ```sh
+   service named stop
+   service named start
+   ```
+
+6. Em um cliente de cada sub-rede, execute as consultas abaixo. Repita para cada VM e cliente cadastrado. Confira se a resolução direta e a reversa correspondem ao mesmo nome e IP, se o MX aponta para a VM4 e se a consulta externa resolve pela VM4. A resolução externa depende da saída DNS pela VM1.
+
+   ```sh
+   host vm5.trabalho202624.com.br 172.26.24.4
+   host 172.26.24.130 172.26.24.4
+   host -t MX trabalho202624.com.br 172.26.24.4
+   host www.registro.br 172.26.24.4
+   ```
+
+   Para confirmar o cache, repita a consulta externa antes do vencimento do TTL e observe com o Wireshark se a VM4 responde sem repetir a consulta externa. Da rede do laboratório, confira também que a consulta de um nome interno funciona e que a consulta de um domínio externo pelo BIND retorna `REFUSED`.
+
+7. Nos clientes Linux que usarão o DNS diretamente, ajuste `/etc/resolv.conf` como na prática e teste um nome curto com `host vm5`.
+
+   ```text
+   domain trabalho202624.com.br
+   search trabalho202624.com.br
+   nameserver 172.26.24.4
+   ```
+
+### Procedimento de registro do domínio
+
+1. Pesquise `trabalho202624.com.br` no Registro.br e, se estiver disponível, selecione **Registrar**.
+2. Entre na conta do titular ou faça o cadastro. Informe o CPF ou CNPJ do titular e preencha os dados solicitados. Aceite o contrato e envie a solicitação.
+3. Para o registro, use os servidores autoritativos do Registro.br ou informe os servidores públicos próprios ou da hospedagem. Os endereços privados da intranet são usados na configuração do laboratório.
+4. Acompanhe as mensagens do Registro.br, resolva as pendências indicadas e efetue o pagamento conforme as instruções. Confira a situação do domínio no painel.
+
+Referências para DNS e registro. Prática da Aula 05, itens 2 e 3, Aula 05 teórica para `host -t MX`, prática da Aula 03 para captura no Wireshark e [tutorial oficial do Registro.br](https://registro.br/ajuda/tutoriais-administrativos/).

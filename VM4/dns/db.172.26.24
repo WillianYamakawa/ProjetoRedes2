@@ -1,0 +1,16 @@
+$TTL 604800
+@ IN SOA vm4.trabalho202624.com.br. root.trabalho202624.com.br. (
+    1      ; Serial
+    604800 ; Refresh
+    86400  ; Retry
+    2419200 ; Expire
+    604800 ; Negative cache TTL
+)
+@   IN NS vm4.trabalho202624.com.br.
+1   IN PTR vm1.trabalho202624.com.br.
+2   IN PTR vm2.trabalho202624.com.br.
+3   IN PTR vm3.trabalho202624.com.br.
+4   IN PTR vm4.trabalho202624.com.br.
+129 IN PTR vm2-b.trabalho202624.com.br.
+130 IN PTR vm5.trabalho202624.com.br.
+131 IN PTR vm6.trabalho202624.com.br.
