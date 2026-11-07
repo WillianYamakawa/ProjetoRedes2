@@ -1,0 +1,174 @@
+===== PAGINA 1 =====
+                                   Escola de Engenharia de Piracicaba
+                      Redes de Computadores II – Prof. José Martins Junior
+                                                 Aula 13 – prática
+                                          Assunto: VPN com GRE e SSH
+
+1.   Situação desejada (mesma configuração de aulas passadas, mas agora com VPN):
+
+
+
+                                                                        GW                               Internet
+
+                                   A.B.C.0/D                              A.B.C.X
+
+
+
+                                    A.B.C.N                  (enp0s3)
+
+                                                  VM1          NAT
+
+
+                                   192.168.M.1          (enp0s8)
+
+          192.168.M.0/24                                              Legenda:
+
+                                VPN com GRE                           A.B.C – prefixo da rede local do laboratório
+   192.168.M.2     (enp0s3)                                           /D – máscara da rede local do laboratório
+                                                                      A.B.C.X – endereço do gateway da rede
+                 VM2                                                  M – número da máquina no lab (partindo de 1)
+                                                                      N = M + 100
+ 192.168.N.2         (enp0s8)
+
+                                  192.168.N.0/24
+
+
+                               192.168.N.3        (enp0s3)
+
+                                              VM3          Servidor Web (80)
+
+
+
+
+CASO 1: um exemplo de VPN entre redes com GRE (tunelamento compulsório):
+        Criar uma VPN entre a VM1 e a VM2, com uma rede virtual 10.0.0.0/30;
+        Todo o tráfego entre a VM1 e a rede 192.168.2.0/24 (onde está a VM3) será através da VPN.
+
+2.   Procedimentos preliminares para todas as VMs:
+    a.   Nas configurações da VM, em Rede, configure a “Placa em modo bridge”. Atualize o MAC.
+    b.   Somente as VMs 1 e 2: configurar uma segunda “Placa em modo bridge”. Atualize o MAC.
+    c.   Inicie a VM e, em um terminal, ganhe privilégios do superusuário:
+         su -
+    d.   Em seguida, desative os processos de autoconfiguração da rede:
+         service NetworkManager stop
+         service networking stop
+
+===== PAGINA 2 =====
+3.  Procedimentos para configuração da rede na VM1:
+    a.  Eliminando as configurações automáticas atribuídas às interfaces:
+ifconfig enp0s3 down
+ifconfig enp0s8 down
+ip a flush enp0s3
+ip a flush enp0s8
+    b.  Configuração da interface enp0s3:
+ifconfig enp0s3 A.B.C.N/D up
+    c.  Configuração da interface enp0s8:
+ifconfig enp0s8 192.168.M.1/24 up
+        Cheque se a rede conectada a enp0s8 aparece na tabela de rotas (route -n), caso não apareça:
+        route add -net 192.168.M.0/24 enp0s8
+    d.  Adicione a rota default:
+route add default gw A.B.C.X
+    e.  Habilitação do roteamento:
+echo 1 > /proc/sys/net/ipv4/ip_forward
+    f.  Criação do túnel GRE, entre a VM1 e a VM2:
+iptunnel add vpn1 mode gre remote 192.168.M.2 local 192.168.M.1 key 123456
+    g.  Criação da interface virtual vpn1 para suportar o enlace ponto a ponto da VPN:
+ifconfig vpn1 10.0.M.1/30 pointopoint 10.0.M.2
+    h.  Criação da rota para a rede interna 192.168.2.0/24, passando pela VPN:
+route add -net 192.168.N.0/24 gw 10.0.M.2
+    i.  Configuração do NAT MASQUERADE:
+iptables -F
+iptables -t nat -F
+iptables -t mangle -F
+iptables -t nat -A POSTROUTING -o enp0s3 -j SNAT --to A.B.C.N
+Obs.: caso necessário (se não funcionar resolução de nomes), configure o DNS em cada VM. Ex.:
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+4.  Procedimentos para configuração da rede na VM2:
+    a.  Eliminando as configurações automáticas atribuídas às interfaces:
+ifconfig enp0s3 down
+ifconfig enp0s8 down
+ip a flush enp0s3
+ip a flush enp0s8
+    b.  Configuração da interface enp0s3:
+ifconfig enp0s3 192.168.M.2/24 up
+    a.  Configuração da interface enp0s8:
+ifconfig enp0s8 192.168.N.2/24 up
+        Cheque se a rede conectada a enp0s8 aparece na tabela de rotas (route -n), caso não apareça:
+        route add -net 192.168.N.0/24 enp0s8
+    c.  Adicione a rota default:
+route add default gw 192.168.M.1
+    d.  Habilitação do roteamento:
+echo 1 > /proc/sys/net/ipv4/ip_forward
+    e.  Criação do túnel GRE, entre a VM1 e a VM2:
+iptunnel add vpn1 mode gre remote 192.168.M.1 local 192.168.M.2 key 123456
+    f.  Criação da interface virtual vpn1 para suportar o enlace ponto a ponto da VPN:
+ifconfig vpn1 10.0.M.2/30 pointopoint 10.0.M.1
+Obs.: caso necessário (se não funcionar resolução de nomes), configure o DNS em cada VM. Ex.:
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+===== PAGINA 3 =====
+5.   Procedimentos para configuração da rede na VM3:
+    b.  Eliminando a configuração automática atribuída à interface:
+ifconfig enp0s3 down
+ip a flush enp0s3
+    c.  Configuração da interface enp0s3:
+ifconfig enp0s3 192.168.N.3/24 up
+        Cheque se a rede conectada a enp0s3 aparece na tabela de rotas (route -n), caso não apareça:
+        route add -net 192.168.N.0/24 enp0s3
+    d.  Adicione a rota default:
+route add default gw 192.168.N.2
+Obs.: caso necessário (se não funcionar resolução de nomes), configure o DNS em cada VM. Ex.:
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+6.   Testes da VPN:
+    a.  Testando (ping) na VM1 a alcançabilidade da VM3:
+ping 192.168.N.3
+    b.  Removendo a interface do túnel VPN na VM2:
+ifconfig vpn1 down
+    c.  Repetindo o teste na VM1:
+ping 192.168.N.3
+    d.  Recriando a interface do túnel VPN na VM2:
+ifconfig vpn1 10.0.M.2/30 pointopoint 10.0.M.1
+    e.  Repetindo o teste na VM1:
+ping 192.168.N.3
+
+
+
+
+CASO 2: um exemplo de VPN entre end-points com SSH (tunelamento voluntário):
+       Mapear uma porta 8080 localmente na VM1 para acesso à porta 80 da VM3;
+       Detalhe: não haverá rota, nem túnel GRE, configurada em VM1 para a rede 192.168.2.0/24.
+
+1.  Retirando a configuração do túnel GRE, feita no CASO 1:
+    a.  Nas máquinas VM1 e VM2:
+ifconfig vpn1 down
+    b.  Cheque, em VM1, que nenhuma rota restou para a rede 192.168.N.0/24:
+route -n
+
+2.  Instalando aplicações servidoras nas VM2 e VM3:
+    a.  Na máquina VM2, instale o servidor SSH:
+apt-get install ssh
+    b.  Na máquina VM3, instale o servidor Apache (se já não o instalou):
+apt-get install apache2
+    c.  Para evidenciar o teste, coloque uma linha no fim do index.html do apache, na máquina VM3:
+echo "Teste de VPN voluntaria com SSH" >> /var/www/html/index.html
+
+3.  Criação do túnel voluntário SSH:
+    a.  Na máquina VM1, crie o túnel da porta 8080 local para a porta 80 da VM3, através do SSH da VM2:
+ssh -L 8080:192.168.N.3:80 user@192.168.M.2
+(obs.: abrirá terminal virtual remoto da máquina VM2)
+
+===== PAGINA 4 =====
+4.  Testando o túnel voluntário SSH:
+    a.   Na máquina VM1, abra um novo terminal, e nele:
+telnet localhost 8080
+    b.   Note que houve a conexão, então, obtenha o index.html (document root):
+GET /
+    c.   Refaça o teste, mas agora em um navegador, na máquina VM1:
+http://localhost:8080/
+
+5.  Encerrando o túnel voluntário SSH:
+    a.   Na máquina VM1, encerre o terminal virtual (no mesmo terminal onde executou o SSH):
+logout
+(se desejar, refaça os testes descritos em 4)

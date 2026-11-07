@@ -1,0 +1,74 @@
+Redes de Computadores II – Prof. José Martins Junior
+Prática – instalação, configuração e uso de servidores SSH, Telnet e FTP
+
+
+1. Procedimentos preliminares (Debian - VM instalada na aula de apresentação):
+
+a) Nas configurações da máquina virtual, em Rede, altere a configuração do Adaptador 1 para "Placa em modo Bridge" (escolha, em "Nome" a conexão adequada do seu hospedeiro, Ethernet ou Wireless). Em avançado, verifique se "Cabo conectado" está devidamente selecionado. Inicialize a máquina e entre com o usuário "user".
+
+
+2. Instalação dos servidores SSH, Telnet e FTP:
+
+a)  Em um terminal virtual com root (su -), atualize o sistema e instale o SSH server:
+apt-get update
+apt-get install ssh
+
+b)  Em um terminal virtual com root (su -), atualize o sistema e instale o Telnet server:
+apt-get install inetutils-telnetd
+
+Então edite o arquivo de configuração do superserver:
+nano /etc/inetd.conf
+Descomente a linha, salve e feche o arquivo:
+telnet  stream  tcp     nowait  root    /usr/sbin/tcpd  /usr/sbin/telnetd
+Em seguida, reinicie o superserver:
+service inetutils-inetd stop
+service inetutils-inetd start
+
+c)  Em um terminal virtual com root (su -), atualize o sistema e instale o FTP server:
+apt-get install inetutils-ftpd ftp
+
+Então edite o arquivo de configuração do superserver:
+nano /etc/inetd.conf
+Descomente a linha, salve e feche o arquivo:
+ftp     stream  tcp     nowait  root    /usr/sbin/tcpd  /usr/sbin/ftpd --logging --auth=pam
+Em seguida, reinicie o superserver:
+service inetutils-inetd stop
+service inetutils-inetd start
+
+
+3. Teste dos serviços:
+Primeiro, inicie outra VM, com somente um adaptador em modo bridge.
+Em um terminal com root (su -), instale:
+apt-get update
+apt-get install ftp
+Na primeira VM, verifique o endereço IP obtido por ela (IP_SERVIDOR), com ifconfig ou ip -4 a.
+
+a) Teste do SSH:
+ssh user@IP_SERVIDOR
+Em seguida, aceite o certificado da chave pública e, então, insira a senha do usuário user.
+Assim que acessar, constate que está na máquina com, por exemplo, a checagem do seu IP (ip -4 a).
+Pode encerrar a sessão, com logout.
+
+b) Teste do Telnet:
+telnet IP_SERVIDOR
+Em seguida, insira a senha do usuário user.
+Assim que acessar, constate que está na máquina com, por exemplo, a checagem do seu IP (ip -4 a).
+Pode encerrar a sessão, com logout.
+
+c) Teste do FTP:
+Inicialmente, em um terminal de usuário comum (user) da primeira VM, crie um arquivo texto com seu nome dentro.
+echo "Escreva aqui seu nome completo" > meunome.txt
+Agora, na segunda VM:
+ftp user@IP_SERVIDOR
+Em seguida, insira a senha do usuário user.
+Execute os comandos:
+help
+ls
+get meunome.txt
+delete meunome.txt
+ls
+quit
+
+Por fim, verifique o arquivo em um terminal, na segunda máquina:
+ls -l
+cat meunome.txt

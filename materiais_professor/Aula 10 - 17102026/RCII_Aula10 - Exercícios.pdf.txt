@@ -1,0 +1,60 @@
+===== PAGINA 1 =====
+                                    Escola de Engenharia de Piracicaba
+                      Redes de Computadores II – Prof. José Martins Junior
+                                                Aula 10 – Exercícios
+
+    1.   Descreva sucintamente sobre os parâmetros de QoS: confiabilidade (reliability), atraso (delay),
+         variação do atraso (jitter), e largura de banda (bandwidth).
+
+    2.   No que diferem Serviços Integrados de Diferenciados?
+
+    3.   De que forma o uso de memória pode ser aplicado no controle de rajadas de tráfego?
+
+    4.   Qual é a principal evolução do Token Bucket, em relação ao Leaky Bucket?
+
+    5.   Explique o que é controle de admissão.
+
+    6.   Como é utilizado o RSVP para reservas de recursos?
+
+    7.   Explique cada uma das seguintes etapas do controle de tráfego:
+              a.   Moldagem
+              b.   Escalonamento
+              c.   Classificação
+              d.   Policiamento
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                             1

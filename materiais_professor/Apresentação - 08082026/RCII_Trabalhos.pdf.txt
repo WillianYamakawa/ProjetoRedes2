@@ -1,0 +1,156 @@
+===== PAGINA 1 =====
+             Escola de Engenharia de Piracicaba – Ciência da Computação
+                          Redes de Computadores II – Prof. José Martins Junior
+                                     Trabalho em equipes – Especificação
+1.  Definição do projeto:
+Trabalho em equipes       (até 4 alunos): instalação de serviços em uma rede local interna.
+Datas de entrega: 10 e 17/11/2026 (a atribuição de data a cada grupo será divulgada).
+Forma de entrega:
+
+            Relatório escrito – especificação dos requisitos, modelo geral da solução, breve descrição
+             sobre cada serviço implantado, detalhamento das atividades de instalação, configuração e uso;
+
+            Demonstração prática da solução desenvolvida, incluindo-se teste de uso, quando aplicável.
+2.  Objetivo geral
+Deverá ser criada uma rede interna (intranet) em máquinas virtuais Linux, de forma a atender a situação
+desejada, descrita a seguir.
+3.  Situação desejada:
+Para a implantação da       intranet, cada grupo deve atender todos os requisitos a seguir:
+Obs.: o valor de    N, onde aparecer a seguir, é o número do grupo, divulgado pelo professor.
+Requisito 1 – Rede, NAT         e Firewall
+    1.  Definição e configuração de endereços IP fixos para os equipamentos servidores (VM1 a VM6) que
+        integrarão a    intranet, conforme definido no desenho do final da seção:
+        a)   Configurar os gateways das VM1 e VM2 para roteamento IP entre as três redes;
+    2.  Tradução de endereços IP (NAT), na VM1, para os clientes da rede interna.
+    3.  Proteção, através de um         firewall  (Netfilter/iptables), na VM1, para a comunicação entre as redes
+        externa e internas, implementando as regras:
+        a)   Proibir tudo, inicialmente, e liberar o que segue;
+        b)   Permitir acessos externos aos servidores Web (HTTP/HTTPS), DNS e SMTP, na rede interna;
+        c)   Permitir o acesso do DNS        cache interno a outros servidores DNS externos;
+        d)   Permitir o acesso a servidores externos Web (HTTP/HTTPS) e FTP apenas ao servidor                        Proxy;
+        e)   Permitir a passagem de ICMP entre as redes internas e externa.
+Requisito 2 – DNS e registro:
+    1.  Criação de um nome de domínio (trabalho2026N.com.br) e descrição completa dos procedimentos
+        necessários para seu registro (no registro.br);
+    2.  Instalação e configuração do servidor DNS, para o domínio criado (e seu reverso) para todas as
+        máquinas (servidoras e clientes) da         intranet;
+    3.  Habilitação do DNS cache para oferecer resolução de nomes à                  intranet.
+Requisito    3 – SMTP e IMAP:
+    1.  Instalação e configuração de servidor de correio eletrônico:
+        a)   Configurar permissão de envio de e-mails pelas máquinas da                intranet;
+        b)   Criar  mailboxes para 4 usuários.
+    2.  Instalação e configuração do serviço de acesso a caixas postais (IMAP);
+    3.  Configurar cliente de e-mail para operar com esses serviços na               intranet.
+                                                                                                                              1
+
+===== PAGINA 2 =====
+Requisito    4 – Web (HTTP e HTTPS), PHP e Proxy:
+    1.  Instalação e configuração de servidor Web (Apache):
+        a)   Além do HTTP, habilitar o HTTPS;
+        b)   Instalar e habilitar o certificado SSL para o HTTPS;
+        c)   Instalar e configurar o módulo PHP no servidor Web.
+    2.  Instalação de     proxy Web (Squid) para os clientes da          intranet.
+        a)   Configuração do serviço para operação mediante              login de usuários;
+        b)   Configuração de regras ACL para:
+           i.    Proibir o acesso aos domínios: instagram.com, tiktok.com e facebook.com;
+           ii.   Proibir o acesso a URLs que contenham o termo “sexo”;
+          iii.   Proibir o acesso a qualquer destino entre 23h e 8h.
+Requisito 5 – Samba e CUPS:
+    1.  Instalação e configuração do serviço de arquivos em rede (Samba), com:
+        a)   Criação de um grupo de trabalho TRAB2026N;
+        b)   Compartilhamento de um diretório “arquivosN” e 4 usuários (com login e senha), sendo 2 com
+             direito de escrita e leitura e 2 apenas leitura.
+    2.  Instalação e configuração do serviço de impressão (CUPS), com:
+        a)   Instalar e configurar uma impressora PDF no CUPS;
+Requisito 6 – QoS (HTB) para atender o seguinte:
+    1.  Limitação de banda do tráfego de entrada na intranet para um total de 50MB/s, divididos em:
+        a)   25MB/s para Web, 15MB/s para FTP e 10MB/s para os demais fluxos;
+        b)   Deve ser configurado de forma que o tráfego restante nunca utilize da banda excedente dos
+             demais (Web e FTP);
+    2.  Limitação de banda do tráfego de saída da intranet para um total de 20MB/s, divididos em:
+        a)   10MB/s para Web (acesso de hosts externos ao servidor Web da intranet), 5MB/s para o SMTP
+             (para envio de mensagens do servidor SMTP da intranet), e o restante para os demais fluxos;
+        b)   O excedente da banda destinada para Web não pode ser compartilhado pelos demais fluxos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                              2
+
+===== PAGINA 3 =====
+Representação gráfica da situação a ser obtida:
+
+                                              Rede local do laboratório
+
+
+
+
+                                                     VM1         GW, NAT, HTB, Firewall
+
+
+
+
+                             172.26.N.0/25
+
+
+
+
+      VM2        GW, DHCP                                     VM3                                  VM4
+
+                                                      HTTP, HTTPS, PHP,                DNS, SMTP, IMAP
+                                                      Webmail
+                     172.26.N.128/25
+
+
+
+
+              VM5                        VM6
+
+              CUPS,                  Proxy
+              Samba
+
+IMPORTANTE:  todos os serviços e requisitos deverão ser atendidos com uso de máquinas
+virtuais com   SO Linux      (appliance fornecida pelo professor). Outros sistemas operacionais serão
+permitidos apenas em máquinas clientes, para teste dos serviços.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                    3

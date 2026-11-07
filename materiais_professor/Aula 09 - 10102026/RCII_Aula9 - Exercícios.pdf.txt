@@ -1,0 +1,61 @@
+===== PAGINA 1 =====
+                                    Escola de Engenharia de Piracicaba
+                      Redes de Computadores II – Prof. José Martins Junior
+                                                Aula 9 – Exercícios
+
+
+    1.   Qual das seguintes abordagens é mais adequada à configuração de regras de acesso em um
+         firewall? E em um proxy?
+              a.  O que não é expressamente proibido é permitido;
+              b.  O que não é expressamente permitido é proibido.
+
+
+
+
+    2.   O uso de criptografia pode atender quais dos requisitos de segurança (disponibilidade, confidência,
+         integridade)? Por quê?
+
+
+
+
+
+    3.   Descreva os requisitos de segurança disponibilidade, confidência e integridade. Descreva também a
+         vulnerabilidades interceptação, interrupção e modificação. Correlacione cada vulnerabilidade ao
+         requisito de segurança que ela pode comprometer.
+
+
+
+
+    4.   Descreva o que é um DoS. Que tipo de vulnerabilidade do protocolo esse ataque pode explorar?
+         Quais são os efeitos de um DoS?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                            1

@@ -1,0 +1,157 @@
+===== PAGINA 1 =====
+                                  Escola de Engenharia de Piracicaba
+                     Redes de Computadores II – Prof. José Martins Junior
+                                               Aula 11 – prática
+          Assunto: Configuração de ambiente de rede IP com roteamento, NAT e firewall
+
+
+1.   Situação desejada:
+
+                                                                     GW                               Internet
+
+                                   A.B.C.0/D                            A.B.C.X
+
+
+
+                                   A.B.C.N                  (enp0s3)
+
+                                                 VM1         NAT
+
+
+                                  192.168.M.1          (enp0s8)
+
+         192.168.M.0/24                                            Legenda:
+
+                                                                   A.B.C – prefixo da rede local do laboratório
+   192.168.M.2     (enp0s3)                                        /D – máscara da rede local do laboratório
+                                                                   A.B.C.X – endereço do gateway da rede
+                VM2         Firewall                               M – número da máquina no lab (partindo de 1)
+                                                                   N = M + 100
+ 192.168.N.2         (enp0s8)
+
+                                 192.168.N.0/24
+
+
+                              192.168.N.3        (enp0s3)
+
+                                            VM3          Servidores Web (80) e SSH (22)
+
+
+Tabela de rotas da VM1:
+          Destino                    Gateway                    Netmask                   Interface
+          A.B.C.0                    0.0.0.0                    /D                        enp0s3
+          192.168.M.0                0.0.0.0                    /24                       enp0s8
+          0.0.0.0                    A.B.C.X                    /0                        enp0s3
+          192.168.N.0                192.168.M.2                /24                       enp0s8
+Tabela de rotas da VM2:
+          Destino                    Gateway                    Netmask                   Interface
+          192.168.M.0                0.0.0.0                    /24                       enp0s3
+          192.168.N.0                0.0.0.0                    /24                       enp0s8
+          0.0.0.0                    192.168.M.1                /0                        enp0s3
+Tabela de rotas da VM3:
+          Destino                    Gateway                    Netmask                   Interface
+          192.168.N.0                0.0.0.0                    /24                       enp0s3
+          0.0.0.0                    192.168.N.2                /0                        enp0s3
+
+===== PAGINA 2 =====
+2.  Procedimentos preliminares para todas as VMs:
+    a.  Nas configurações da VM, em Rede, configure a “Placa em modo bridge”. Atualize o MAC.
+    b.  Somente as VMs 1 e 2: configurar uma segunda “Placa em modo bridge”. Atualize o MAC.
+    c.  Inicie a VM e, em um terminal, ganhe privilégios do superusuário:
+       su –
+    d.  Em seguida, desative os processos de autoconfiguração da rede das VMs 2 e 3:
+       service NetworkManager stop
+       service networking stop
+
+3.  Procedimentos para configuração da rede na VM1:
+    a.  Eliminando as configurações automáticas atribuídas às interfaces:
+ifconfig enp0s3 down
+ifconfig enp0s8 down
+ip a flush enp0s3
+ip a flush enp0s8
+    b.  Configuração da interface enp0s3:
+ifconfig enp0s3 A.B.C.N/D up
+    c.  Configuração da interface enp0s8:
+ifconfig enp0s8 192.168.M.1/24 up
+       Cheque se a rede conectada a enp0s8 aparece na tabela de rotas (route -n), caso não apareça:
+       route add -net 192.168.M.0/24 enp0s8
+    d.  Adicione a rota default:
+route add default gw A.B.C.X
+    e.  Adicionando a rota para a rede interna:
+route add -net 192.168.N.0/24 gw 192.168.M.2
+    f.  Habilitação do roteamento:
+echo 1 > /proc/sys/net/ipv4/ip_forward
+    g.  Configuração do NAT MASQUERADE:
+iptables -F
+iptables -t nat -F
+iptables -t mangle -F
+iptables -t nat -A POSTROUTING -o enp0s3 -j SNAT --to A.B.C.N
+Obs.: caso necessário (se não funcionar resolução de nomes), configure o DNS em cada VM. Ex.:
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+4.  Procedimentos para configuração da rede na VM2:
+    a.  Eliminando as configurações automáticas atribuídas às interfaces:
+ifconfig enp0s3 down
+ifconfig enp0s8 down
+ip a flush enp0s3
+ip a flush enp0s8
+    b.  Configuração da interface enp0s3:
+ifconfig enp0s3 192.168.M.2/24 up
+    c.  Configuração da interface enp0s8:
+ifconfig enp0s8 192.168.N.2/24 up
+       Cheque se a rede conectada a enp0s8 aparece na tabela de rotas (route -n), caso não apareça:
+       route add -net 192.168.N.0/24 enp0s8
+    d.  Adicione a rota default:
+route add default gw 192.168.M.1
+    e.  Habilitação do roteamento:
+echo 1 > /proc/sys/net/ipv4/ip_forward
+Obs.: caso necessário (se não funcionar resolução de nomes), configure o DNS em cada VM. Ex.:
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+===== PAGINA 3 =====
+5.  Procedimentos para configuração da rede na VM3:
+    a.  Eliminando a configuração automática atribuída à interface:
+ifconfig enp0s3 down
+ip a flush enp0s3
+    b.  Configuração da interface enp0s3:
+ifconfig enp0s3 192.168.N.3/24 up
+        Cheque se a rede conectada a enp0s3 aparece na tabela de rotas (route -n), caso não apareça:
+        route add -net 192.168.N.0/24 enp0s3
+    c.  Adicione a rota default:
+route add default gw 192.168.N.2
+Obs.: caso necessário (se não funcionar resolução de nomes), configure o DNS em cada VM. Ex.:
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+6.  Instalação dos servidores na VM3:
+    a.  Instalação do servidor Web (Apache 2):
+apt-get update
+apt-get install apache2
+    b.  Instalação do servidor SSH:
+apt-get install ssh
+
+7.  Configuração do Firewall na VM2, para:
+   I.   Proibir qualquer pacote de passar (ação padrão de descarte).
+  II.   Permissão para passagem de ICMP.
+  III.  Permissão de acesso das máquinas da rede 192.168.M.0/24 à porta 22 da máquina
+        192.168.N.3 (VM3).
+  IV.   Permissão de acesso das máquinas da rede 192.168.M.0/24 à porta 80 da máquina
+        192.168.N.3 (VM3).
+  V.    Permissão   de   conexão   das   máquinas   da   rede   192.168.M.0/24   com   a   máquina
+        192.168.N.4, para quaisquer portas.
+
+
+    a.  Limpando as tabelas na VM2:
+iptables -F
+    b.  Configuração da ação padrão de descarte (requisito I):
+iptables -P FORWARD DROP
+    c.  Permitindo a passagem de ICMP (requisito II):
+iptables -A FORWARD -p icmp -j ACCEPT
+    d.  Permitindo o acesso à 192.168.N.3:22 de máquinas de 192.168.M.0/24 (requisito III):
+iptables -A FORWARD -p tcp -s 192.168.M.0/24 -d 192.168.N.3 --dport 22 -j ACCEPT
+iptables -A FORWARD -p tcp -s 192.168.N.3 --sport 22 -d 192.168.M.0/24 -j ACCEPT
+    e.  Permitindo o acesso à 192.168.N.3:80 de máquinas de 192.168.M.0/24 (requisito IV):
+iptables -A FORWARD -p tcp -s 192.168.M.0/24 -d 192.168.N.3 --dport 80 -j ACCEPT
+iptables -A FORWARD -p tcp -s 192.168.N.3 --sport 80 -d 192.168.M.0/24 -j ACCEPT
+    f.  Permitindo de conexão à 192.168.N.4:* de máquinas de 192.168.M.0/24 (requisito V):
+iptables -A FORWARD -p tcp -s 192.168.M.0/24 -d 192.168.N.4 --syn -j ACCEPT
+iptables -A FORWARD -p tcp -s 192.168.N.4 -d 192.168.M.0/24 --syn -j ACCEPT

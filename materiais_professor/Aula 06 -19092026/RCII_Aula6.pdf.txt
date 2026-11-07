@@ -1,0 +1,177 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 6
+    World Wide Web (HTTP) e Proxy
+    Prof. José Martins Junior
+
+===== PAGINA 2 =====
+                                     A Web
+
+
+•  Em 1990, Tim Berners-Lee criou um novo tipo de aplicação voltada à
+   exibição de documentos (hipertextos)
+     –  A ferramenta gráfica chamada WorldWideWeb destinava-se
+        inicialmente à organização e exibição de documentos científicos
+•  A “Web”, criada a partir dessa idéia, foi responsável pelo enorme
+   crescimento da Internet
+     –  O “Boom” ocorreu quando provedores comerciais (~1994) permitiram
+        o amplo acesso à Internet por pessoas e empresas
+     –  Modelo mostrou-se adequado ao acesso a serviços e informações
+•  Os padrões para a Web são atualmente controlados pela W3 Consortium
+   (http://www.w3.org/)
+•  Duas áreas importantes de estudo atuais
+     –  Web Engineering: métodos e modelos para SIs na Web
+     –  E-Business: tipos de negócio aplicados a meios eletrônicos
+        (http://www.digitalenterprise.org/)
+
+===== PAGINA 3 =====
+                Conteúdo (hipertexto)
+
+•  O hipertexto associa referências (ou ligações) a outros
+   documentos no próprio conteúdo textual
+    –   Tal conteúdo é descrito através de uma linguagem de marcação, HTML
+        (HyperText Markup Language)
+    –   Atualmente, é também possível a inclusão de conteúdo em mídia
+        diferente (hipermídia), como figuras, streams de vídeo e áudio
+         •  Tais conteúdos são adequadamente convertidos e referenciados com o
+            uso do MIME
+•  Em 2000, Berners Lee anunciou a Web Semântica
+    –   Definição de novos padrões
+         •  XML (Extensible Markup Language)
+         •  RDF (Resource Description Framework), para a representação de dados
+            (conceitos)
+
+===== PAGINA 4 =====
+    URL (Uniform Resource Locator)
+
+
+•   Sintaxe geral do URL (RFC 1738)
+<protocol>://[<usr>:<pass>@]<host>[:<port>]/[<url-path>][?<par>=<value>&...]
+     –   protocol: especifica o protocolo a ser utilizado na transferência. O padrão é
+         http (outros: https, ftp)
+     –   user e password: (opcionais) referem-se ao usuário e a sua senha
+     –   host: fully qualified domain name de um host (forma literal ou notação
+         decimal)
+     –   port: (opcional) número da porta a ser conectada
+     –   url-path:  fornece os detalhes de como o recurso específico pode ser acessado
+     –   <var>=<value>: pares de parâmetro e valor adicionados após um '?' no final da
+         URL. O símbolo '&' separa os pares. Encaminha dados de uma request
+         (método GET)
+•   Exemplo:
+http://www.google.com.br/search?hl=pt-BR&q=teste&btnG=Pesquisa+Google&meta=
+
+===== PAGINA 5 =====
+HTTP (HyperText Transfer Protocol)
+
+•   Protocolo definido para a comunicação entre aplicações Web
+•   A versão 1.1 (HTTP/1.1) é definida pela RFC 2616
+     –   Alguns campos do header HTTP:
+           •  Content-Encoding - tipo de compressão do conteúdo
+           •  Content-Language - código da linguagem natural do conteúdo
+           •  Content-Length - tamanho em bytes do conteúdo
+           •  Date - data e horário de criação da mensagem
+           •  Content-Type - o tipo de conteúdo (MIME - RFC 822) transportado pela mensagem
+     –   Métodos de encaminhamento definidos pelo HTTP:
+           •  GET - solicita que o servidor envie a página referenciada pela URL (que pode conter
+              parâmetros extra);
+           •  PUT - solicita que o servidor receba um documento, em um formato MIME
+              (informado no Content-Type), e o armazene na URL informada
+           •  POST - solicita que o servidor receba dados (no conteúdo) para serem informados a
+              um documento (normalmente um programa) especificado pela URL
+
+===== PAGINA 6 =====
+                    Interação via HTTP
+
+
+
+
+
+•  Baseia-se em “hits” de requisição/resposta
+    –  request: enviada pelo cliente, possui conteúdo ASCII – linhas de texto
+       separadas por blank lines; a primeira linha especifica um método e o
+       caminho (path) para o arquivo (página)
+    –  response: enviada pelo servidor, conteúdo MIME especificado no
+       campo Content-Type
+•  Cada requisição HTTP, realizada pelo cliente, representa a
+   solicitação de um recurso hipermídia (referenciado pela URL)
+    –  Normalmente gera uma nova conexão TCP para cada recurso, que é
+       encerrada quando da resposta
+
+===== PAGINA 7 =====
+              Cliente-servidor no HTTP
+
+•   Clientes Web (navegadores ou Web browsers)
+     –  São ferramentas que permitem a interação do usuário, através da
+        interpretação e exibição do conteúdo (que pode ser GUI), e pelo
+        suporte à seleção de links dos hipertextos
+          •  Para a exibição de outros tipos de mídia, referenciadas no conteúdo com o
+             MIME, os browsers dispõe de plugins ou módulos específicos
+          •  Navegadores mais conhecidos: Mozilla, Chrome e Internet Explorer
+•   Servidores Web
+     –  Aguardam requisições por recursos, dos clientes
+          •  A porta servidora padrão para o HTTP é a 80
+          •  Mantêm módulos específicos para execução de programas “server-side”
+             (CGI, Perl, PHP), que criam conteúdo dinâmico
+          •  Esse recurso é normalmente referenciado por requisições de formulários
+             HTML (meio tradicional de input de dados via HTTP)
+          •  Implementações mais conhecidas: Apache e IIS
+
+===== PAGINA 8 =====
+                        Web caching
+
+•  Para se evitar a demanda por muitas conexões, para as
+   múltiplas requisições de recursos descritos em páginas Web
+•  Uma forma consiste em se manter cópias das páginas
+   acessadas recentemente em um cache local, na máquina do
+   cliente
+•  Assim, se o usuário decidir acessar novamente uma mesma
+   página depois de um pequeno espaço de tempo, o navegador
+   pode carregá-la de uma cópia do disco
+
+===== PAGINA 9 =====
+                               Proxy server
+
+•   Outra estratégia de caching é o uso de um servidor Proxy
+     –   Atua normalmente como um cache para uma rede local
+           • Clientes solicitam todos os objetos hipermídia (referenciados por suas
+             URLs) ao servidor proxy
+           • O servidor proxy intermedia a comunicação com o servidor Web e obtém
+             o recurso solicitado
+           • A seguir, armazena uma cópia do mesmo, associando a sua identificação
+             (URL) e o seu timestamp
+           • O recuso então é enviado ao cliente que solicitou
+           • Quando ocorrer a próxima solicitação do mesmo recurso, por um cliente
+             da rede, o servidor proxy pode decidir por encaminhar a cópia que
+             mantém em cache (caso não tenha expirado o seu tempo de vida),
+             evitando assim um novo contato com o servidor Web
+     –   A implementação de servidor proxy mais famosa é o Squid e sua porta
+         servidora padrão (sugerida na instalação) é a 3128
+
+===== PAGINA 10 =====
+                           Proxy server
+
+•  O servidor proxy permite também estabelecer regras e
+   restrições de acesso (ACL – Access Control Lists)
+    –  Tais regras consistem permissões e negações de acesso, baseadas em
+       protocolos, endereços de origem e destino, nome de usuário
+       (autenticação)
+         •  No squid, são descritas no arquivo de configuração /etc/squid/squid.conf
+•  A associação de um servidor proxy e um firewall de rede
+   permite implementar e aplicar políticas de acesso à Internet
+   para clientes de uma rede local
+
+===== PAGINA 11 =====
+                            Práticas
+
+•  Instalação, execução e teste de servidores HTTP e Proxy
+
+===== PAGINA 12 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 7.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 27.

@@ -1,0 +1,95 @@
+Redes de Computadores II – Prof. José Martins Junior
+Prática - controle de tráfego com HTB
+
+Requisitos:
+- Uma classe pai com limite de banda 500kB/s (inclusive teto);
+- Três classes filhas (10, 11 e 12), com diferentes limites de banda (200-500, 50-100 e 5-10);
+- A classe 11 deve ser a padrão;
+- Filtrar tráfego da rede do laboratório (A.B.C.0/D), para a porta de destino 80, e associar a classe 12;
+- Associar o qdisc pfifo para as classes 10 e 11, e sfq para a classe 12.
+
+Obs.: A, B, C, M, N e X, definidos na prática da aula 11.
+
+Configuração prévia da prática
+
+Gateway (VM1):
+service NetworkManager stop
+service networking stop
+ifconfig enp0s3 down
+ifconfig enp0s8 down
+ip a flush enp0s3
+ip a flush enp0s8
+ifconfig enp0s3 A.B.C.N/D up
+ifconfig enp0s8 192.168.M.1/24 up
+route add default gw A.B.C.X
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+Máquina na rede interna 192.168.M.0/24 (VM2):
+service NetworkManager stop
+service networking stop
+ifconfig enp0s3 down
+ifconfig enp0s8 down
+ip a flush enp0s3
+ip a flush enp0s8
+ifconfig enp0s3 192.168.M.2/24 up
+route add default gw 192.168.M.1
+
+Máquina na rede do laboratório A.B.C.0/D (VM3):
+service NetworkManager stop
+service networking stop
+ifconfig enp0s3 down
+ip a flush enp0s3
+ifconfig enp0s3 A.B.C.K/D up
+(onde K = M + 50)
+route add default gw A.B.C.N
+
+
+Configuração do HTB
+
+Criando a qdisc principal root, associada à interface enp0s3 e definindo a classe 11 como padrão:
+tc qdisc add dev enp0s3 root handle 1: htb default 11
+
+Criando classe pai 1:1, com a limitação geral da banda:
+tc class add dev enp0s3 parent 1: classid 1:1 htb rate 500kbps ceil 500kbps
+
+Criando as 3 classes filhas, com as respectivas bandas:
+tc class add dev enp0s3 parent 1:1 classid 1:10 htb rate 200kbps ceil 500kbps
+tc class add dev enp0s3 parent 1:1 classid 1:11 htb rate 50kbps ceil 100kbps
+tc class add dev enp0s3 parent 1:1 classid 1:12 htb rate 5kbps ceil 10kbps
+
+Adicionando o classificador (filter) requerido:
+tc filter add dev enp0s3 protocol ip parent 1:0 prio 1 u32 match ip src A.B.C.0/D match ip dport 80 0xffff flowid 1:12
+
+Definindo classless qdiscs, específicas para cada classe filha:
+tc qdisc add dev enp0s3 parent 1:10 handle 20: pfifo limit 5
+tc qdisc add dev enp0s3 parent 1:11 handle 30: pfifo limit 5
+tc qdisc add dev enp0s3 parent 1:12 handle 40: sfq perturb 10
+
+Para exibir os detalhes configurados:
+tc qdisc show dev enp0s3
+tc class show dev enp0s3
+tc filter show dev enp0s3
+
+Testes e alteração de parâmetros
+
+Teste na máquina da rede do laboratório (A.B.C.K):
+ping -f 192.168.M.2
+Observe, depois de um tempo, o percentual de perda de pacotes.
+
+Aumentando a taxa para esse tráfego:
+tc class del dev enp0s3 parent 1:1 classid 1:11 htb rate 50kbps ceil 100kbps
+tc class add dev enp0s3 parent 1:1 classid 1:11 htb rate 500kbps ceil 500kbps
+tc qdisc add dev enp0s3 parent 1:11 handle 30: pfifo limit 5
+
+Novamente, teste na máquina da rede do laboratório (A.B.C.K):
+ping -f 192.168.M.2
+Observe que o percentual de perda de pacotes diminuiu.
+
+Diminuindo a taxa para esse tráfego:
+tc class del dev enp0s3 parent 1:1 classid 1:11 htb rate 5kbps ceil 10kbps
+tc class add dev enp0s3 parent 1:1 classid 1:11 htb rate 1kbps ceil 2kbps
+tc qdisc add dev enp0s3 parent 1:11 handle 30: pfifo limit 5
+
+Novamente, teste na máquina da rede do laboratório (A.B.C.K):
+ping -f 192.168.M.2
+Observe que o percentual de perda de pacotes aumentou.

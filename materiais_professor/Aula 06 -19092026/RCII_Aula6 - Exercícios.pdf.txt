@@ -1,0 +1,17 @@
+===== PAGINA 1 =====
+                                   Escola de Engenharia de Piracicaba
+                      Redes de Computadores II – Prof. José Martins Junior
+                                               Aula 6 – Exercícios
+
+
+
+
+1.  Por que a adição de muitos elementos multimídia em uma página Web, mesmo que pequenos, pode ocasionar
+    a sobrecarga em um servidor?
+
+
+
+
+
+2.  Para que serve um servidor Proxy? Em um projeto de redes, onde deve ser colocado: próximo aos clientes, ou
+    próximo ao servidor Web? Por quê?

@@ -1,0 +1,65 @@
+===== PAGINA 1 =====
+                              Escola de Engenharia de Piracicaba
+                 Redes de Computadores II – Prof. José Martins Junior
+                                          Aula 12 – Exercícios
+
+
+
+1.  O que são redes privadas virtuais? Quais são as principais diferenças entre os tipos de tunelamen-
+    to: voluntário e compulsório? Apresente um exemplo de utilização para cada um dos tipos.
+
+
+
+
+
+
+
+2.  Classifique cada técnica a seguir como tunelamento voluntário ou compulsório.
+         a.  Tunelamento entre end-points (portas) com SSH.
+
+
+
+         b.  Tunelamento entre duas extranets com GRE.
+
+
+
+
+
+
+3.  Descreva, indique os principais protocolos e apresente exemplos de utilização para os tipos de
+    VPN:
+         a.  Tunelamento em nível 2.
+
+
+
+
+         b.  Tunelamento em nível 3.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                     1

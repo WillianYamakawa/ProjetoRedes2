@@ -1,0 +1,335 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 1
+    Camada   de transporte na Internet
+    Prof.José Martins Junior
+
+===== PAGINA 2 =====
+             Principais características
+
+
+•  Visão “fim-a-fim” da comunicação entre duas aplicações em rede
+
+
+
+
+
+
+
+•  Na Internet, assume papéis importantes
+     –  Identificação precisa e não-ambígua de cada aplicação (porta, ou
+        “endereço” de transporte da aplicação no host)
+     –  Entrega de mensagens entre cada par de aplicações, de acordo com
+        alguns parâmetros de qualidade de serviço
+•  É descrita pela quarta camada no modelo ISO/OSI e pela terceira camada
+   do modelo TCP/IP
+     –  Sua interface (sockets, p.e) prevê acesso aos serviços oferecidos
+
+===== PAGINA 3 =====
+       Camadas e encapsulamento
+
+
+
+
+
+
+
+
+
+
+
+
+•  Uma Transport Data Unit (TPDU) é encapsulada em um pacote na camada
+   de rede, que é encapsulado em um quadro na camada de enlace
+
+===== PAGINA 4 =====
+       Tipos de serviços prestados
+
+• O serviço de transporte pode ser qualificado
+  quanto
+   –  Confiabilidade: confiável ou não confiável
+       • Confirmação, retransmissão e não duplicação de dados
+         transmitidos entre as aplicações
+   –  Conexão: orientado à conexão, ou não
+       • Estabelecimento de conexões que representam um
+         “circuito virtual fim-a-fim”, pelo qual os dados são
+         transmitidos ordenadamente, dando a idéia de um
+         fluxo contínuo (ou stream)
+
+===== PAGINA 5 =====
+                  Primitivas de serviço
+
+
+•  LISTEN
+    –   Coloca a entidade de transporte em estado de atenção, na espera por
+        conexões de outras aplicações
+•  CONNECT
+    –   Com uma mensagem de requisição de conexão (CONNECTION
+        REQUEST), uma aplicação pode solicitar o estabelecimento de uma
+        conexão com outra (em estado LISTENING)
+•  SEND
+    –   Tal primitiva permite uma aplicação enviar dados (DATA) para serem
+        transmitidos pela camada de transporte
+•  RECEIVE
+    –   Através desta primitiva, uma aplicação realiza uma espera bloqueada
+        até que um pacote de dados chegue
+•  DISCONNECT
+    –   Solicita o encerramento da conexão (DISCONNECT REQUEST)
+
+===== PAGINA 6 =====
+           Paradigma cliente-servidor
+
+
+•   As aplicações em rede relacionam-se em pares onde cada uma assume
+    um papel diferente: cliente ou servidora
+
+
+
+
+
+     –  Cada relação descreve um serviço em rede
+          •  Exemplos de serviços bem conhecidos: transferência de arquivos, correio
+             eletrônico e emulação de terminal remoto
+          •  Para cada tipo de serviço é então descrito um protocolo de aplicação
+     –  Nessa relação, as aplicações assumem papéis distintos
+          •  A servidora mantém um papel passivo, pois aguarda a solicitação de
+             conexões e serviços de outras aplicações
+          •  As clientes (ativas), solicitam as conexões e serviços
+     –  É comum também encontrar a qualificação escrava para a aplicação
+        servidora, e mestre para a aplicação cliente
+
+===== PAGINA 7 =====
+   Comportamento cliente-servidor
+
+
+•   Comportamento geral de uma aplicação servidora
+     –  Aguarda a mensagem com requisição (que pode conter dados)
+     –  Executa o serviço solicitado
+     –  Envia a mensagem de resposta (que pode conter dados)
+•   Comportamento geral de uma aplicação cliente
+     –  Envia mensagem de requisição ao servidor
+     –  Aguarda o retorno da mensagem com a resposta
+•   Possibilidades de interação:
+     –  Um cliente pode acessar diversos serviços distintos
+           • Ex.: um browser pode acessar páginas Web (HTTP), e arquivos (FTP)
+     –  Um cliente pode acessar vários servidores de um mesmo serviço
+           • Ex.: um browser pode obter elementos de vários servidores Web
+     –  Servidores podem se tornar clientes de outros servidores
+           • Exs.: MTA e DNS
+     –  Um host pode executar várias aplicações clientes e/ou servidoras
+
+===== PAGINA 8 =====
+                 Transporte na Internet
+
+•   A arquitetura TCP/IP define dois protocolos distintos para
+    realização das funções da camada de transporte
+     –  UDP e TCP
+     –  Ambos se diferenciam pelo formato de seus PDUs               e pelo tipo de
+        serviço prestado
+•   Uma função importante é comum a ambos
+     –  Identificar cada aplicação distinta em execução no host
+          •  Multiplexação: as várias aplicações clientes e/ou servidoras podem
+             compartilhar os serviços de uma mesma entidade de transporte
+          •  Porta: identificador único local (na Internet, um descrito por um número
+             inteiro de 16 bits) que descreve e registra as aplicações em execução,
+             atendidas pela pilha TCP/IP
+          •  O servidor utiliza tal identificador para se registrar localmente
+          •  O cliente pode informá-lo, como destino desejado (endpoint), à camada
+             de transporte
+
+===== PAGINA 9 =====
+           Identificação de aplicações
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+•   Identificador único e global de uma aplicação na Internet
+     –  Obtido pela associação do endereço IP de um host (que é único na rede) com
+        a porta de uma aplicação (que é única no host)
+     –  Cada conexão/serviço de transporte possui um único par de identificadores
+
+   (endereço IP, número de porta) no servidor  X  (endereço IP, número de porta) no cliente
+
+===== PAGINA 10 =====
+  Portas bem conhecidas e registradas
+
+•  Muitos serviços são bem conhecidos na Internet
+•  Para eles, foram predefinidas portas padronizadas, que são
+   registradas e mantidas pelo IANA (RFC 3232)
+    –  As portas menores que 1024 são reservadas para uso do sistema
+       (normalmente de acesso ao administrador/superusuário), e são
+       denominadas Well     Known   Ports
+         • Ex.: porta 80 –servidor Web (HTTP)
+    –  As portas maiores que 1023 são chamadas Registered        Port  Numbers,
+       mas podem ser utilizadas por aplicativos de usuários
+         • Ex.: porta 3306 –servidor MySQL
+
+===== PAGINA 11 =====
+      UDP (User Datagram Protocol)
+
+•  O UDP é descrito pela RFC 768
+     –  Provê um tipo de serviço de datagrama (semelhante ao IP)
+          • Não orientado à conexão (connectionless) e não confiável
+          • Ou seja, o UDP não reordena as mensagens antes da entrega à aplicação
+            e não garante a chegada de todas as mensagens
+     –  O header do UDP é muito simples e define apenas
+          • Endereços das portas de origem e de destino
+          • Tamanho total (UDP length) em bytes do datagrama (header + data)
+          • Checksum    (opcional; se não calculado, inserem-se zeros)
+     –  A maior vantagem do UDP é ser um protocolo simples, com poucos
+        campos no header (pouco overhead)
+
+===== PAGINA 12 =====
+O header UDP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      //udp.h no Linux
+      //Big Endian Format
+      struct udphdr {
+        __be16  source;
+        __be16  dest;
+        __be16  len;
+        __sum16 check;
+      };
+
+===== PAGINA 13 =====
+                   Uso do UDP com RPC
+
+•   O RPC é definido pela RFC 1057
+     –  Protocolo para comunicação em sistemas distribuídos
+          •  Uma aplicação pode submeter chamadas, que podem conter parâmetros,
+             a procedimentos que estão distribuídos em uma rede
+          •  A descoberta do possível servidor é realizada através de consulta a um
+             serviço de registro de nomes de procedimentos (portmapper)
+     –  A ideia básica do RPC é fazer com que a chamada remota pareça-se
+        com a chamada a um procedimento local
+          •  Implementações vazias do procedimento são criadas nos dois lados (client
+             stub e server stub), para acesso local pela aplicação usuária
+          •  Tais chamadas locais são interceptadas pelo RPC que redireciona a
+             solicitação para a rede, via UDP
+
+===== PAGINA 14 =====
+                  Uso do UDP com RTP
+
+•  O RTP foi instituído pela RFC 1889
+     –  Protocolo para transmissão de fluxos multimídia na Internet
+     –  Opera sobre UDP, e portanto não é garantido (best-effort)
+          •  A vantagem da operação sobre UDP é justamente a possibilidade de se
+             perder parte das mensagens, para não atrasar a entrega da maioria
+          •  Ex.: em uma transmissão de vídeo, vale muito mais a pena perder alguns
+             pixels do quadro, do que atrasar sua exibição
+     –  O RTP complementa o UDP para a identificação de fluxos (streams) de
+        comunicação que estão sendo transmitidos, além de permitir a
+        anotação de timestamp  e dados para sincronização
+
+===== PAGINA 15 =====
+   TCP (Transmission Control Protocol)
+
+•   O TCP está descrito na RFC 793
+     –  É o principal protocolo de transporte da Internet
+     –  Oferece um tipo de serviço baseado em stream (fluxo): orientado à
+        conexão e confiável
+          •  Realiza a transmissão ordenada e confiável através de uma conexão
+             preestabelecida
+          •  Essa conexão é mantida durante o serviço e deve ser encerrada ao final
+             dele, sendo o correto que toda solicitação parta do lado cliente
+     –  O header do TCP é muito mais completo
+     –  Duas medidas podem restringir o tamanho total de um PDU TCP
+          •  A primeira refere-se ao tamanho máximo de payload do IP, de 65515
+             bytes (haja visto que permite 65535 no total, para um header mínimo de
+             20 bytes)
+          •  A segunda, e que mais ocorre em termos práticos, é a limitação dada pelo
+             MTU da rede local (o quadro Ethernet, por exemplo, permite um
+             tamanho máximo de 1500 bytes de payload)
+
+===== PAGINA 16 =====
+O header do TCP
+
+
+
+
+
+
+                                                 //tcp.h  no Linux
+                                                 //Big Endian Format
+                                                 struct tcphdr   {
+                                                    __be16  source;
+                                                    __be16  dest;
+                                                    __be32  seq;
+                                                    __be32  ack_seq;
+                                                    __u16   doff:4,
+                                                             res1:4,
+                                                             cwr:1,
+                                                             ece:1,
+                                                             urg:1,
+                                                             ack:1,
+                                                             psh:1,
+                                                             rst:1,
+                                                             syn:1,
+                                                             fin:1;
+                                                    __be16  window;
+                                                    __sum16 check;
+                                                    __be16  urg_ptr;
+                                                 };
+
+===== PAGINA 17 =====
+             Campos do header do TCP
+
+
+•   Além dos campos que indicam as portas de origem e de destino
+      –  Sequence number: número de sequência (por conexão) do TPDU
+      –  Acknowledgement number: descreve o número de sequência do TPDU
+         confirmado
+      –  Data Offset: tamanho do cabeçalho TCP em palavras de 32 bits
+      –  Flags:
+            •  CWR: Congestion Window Reduced
+            •  ECE: ECN-Echo bit (Explicit Congestion Notification)
+            •  URG: se 1, campo Urgent pointer foi usado e que existem dados urgentes (interrupção)
+            •  ACK: se 1, indica que o campo Acknowledgement foi usado
+            •  PSH: PUSHed data, comunica à entidade de transporte no destino para entregar cada
+               mensagem que chega, e não esperar para entregar todas de uma vez
+            •  RST: pedido de reset (restabelecimento) de uma conexão que apresenta problemas
+            •  SYN: é usado para solicitar/aceitar o estabelecimento de uma conexão
+            •  FIN: é usado para solicitar/aceitar o encerramento de uma conexão
+      –  Window size: tamanho da janela do controle de fluxo (janela deslizante)
+      –  Urgent pointer: offset para os dados urgentes (em options)
+
+===== PAGINA 18 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. – Capítulo
+   6
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. – Capítulos
+   23 e 24

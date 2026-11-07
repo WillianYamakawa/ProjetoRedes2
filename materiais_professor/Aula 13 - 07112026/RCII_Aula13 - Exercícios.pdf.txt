@@ -1,0 +1,59 @@
+===== PAGINA 1 =====
+                               Escola de Engenharia de Piracicaba
+                 Redes de Computadores II – Prof. José Martins Junior
+                                           Aula 13 – Exercícios
+
+
+
+1.  Quais são os componentes básicos da arquitetura SNMP?
+
+2.  Como um agente informa a estação de gerência a ocorrência de um evento inesperado?
+
+3.  Explique o que é gerenciamento de redes e qual é seu principal objetivo em uma rede de computa-
+    dores. Por que o gerenciamento se torna especialmente importante em redes complexas?
+
+4.  A ISO 7498-4 divide o gerenciamento de redes em cinco áreas funcionais, conhecidas pela sigla
+    FCAPS. Explique cada uma das cinco áreas e apresente um exemplo de atividade relacionada a
+    cada uma delas.
+
+5.  Uma empresa percebe que determinados computadores estão perdendo a conexão com um servi-
+    dor de arquivos de forma intermitente. Utilizando os conceitos de gerenciamento de falhas, descre-
+    va as etapas que poderiam ser utilizadas para identificar e solucionar o problema.
+
+6.  Um administrador deseja avaliar se a infraestrutura de rede atual é suficiente para atender ao cres-
+    cimento do número de usuários. Quais métricas de desempenho poderiam ser monitoradas e o que
+    cada uma delas poderia indicar sobre o funcionamento da rede?
+
+7.  Explique o funcionamento do modelo gerente-agente utilizado pelo SNMP. Qual é a função da esta-
+    ção de gerenciamento, do agente de gerenciamento, da MIB e do protocolo de gerenciamento nes-
+    sa arquitetura?
+
+8.  Explique o que é uma Management Information Base (MIB) e como suas informações são organiza-
+    das. Por que a estrutura hierárquica em árvore é importante para o gerenciamento dos dispositivos
+    de uma rede?
+
+9.  Um administrador deseja monitorar remotamente um roteador e obter informações como seu nome,
+    localização, contato do responsável e estatísticas de tráfego. Explique como o gerente SNMP pode-
+    ria obter essas informações e qual seria o papel do agente e da MIB nesse processo.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                       1

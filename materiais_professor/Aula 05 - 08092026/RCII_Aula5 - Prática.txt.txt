@@ -1,0 +1,102 @@
+Redes de Computadores II – Prof. José Martins Junior
+Prática – instalação, configuração e uso de servidor DNS (Bind)
+
+1. Procedimentos preliminares (Debian - VM instalada na aula de apresentação):
+a) Inicialize a VM com dois adaptadores de rede em modo Bridge.
+
+b) Em um terminal virtual, mude o perfil para super-usuário.
+
+c) Faça a seguinte configuração de interface (virtual) de rede (onde N é o número da sua máquina):
+ifconfig enp0s3 down
+ifconfig enp0s3 192.168.N.1/24 up
+
+d) Obtenha o endereço IP atribuído à interface da VM, via DHCP:
+ifconfig
+Obs.: para este exemplo, a minha interface obteve o endereço 172.16.X.Y (adapte a seguir).
+
+e) Então habilite o roteamento e configure uma rede NAT, para traduzir da rede recém criada para a rede da VM:
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -F
+iptables -t nat -F
+iptables -t mangle -F
+iptables -t nat -A POSTROUTING -o enp0s8 -j SNAT --to 172.16.X.Y
+
+f) Atualize a lista de pacotes (mas, antes, faça o login na rede, com o Firefox):
+apt-get update
+
+2. Instalação e configuração do Bind:
+
+Instalação do DNS server (no Debian):
+apt-get install bind9
+
+Lembre-se que N é o número da sua máquina.
+Edite e configure o arquivo de definição de zonas: /etc/bind/named.conf.local
+zone "exemplo.com.br"         { type master;
+                                file "/etc/bind/db.exemplo.com.br"; };
+zone "N.168.192.in-addr.arpa" { type master;
+                                file "/etc/bind/db.N.168.192"; };
+
+
+Crie o arquivo com os registros da zona master exemplo.com.br: /etc/bind/db.exemplo.com.br
+$TTL    604800
+@    IN    SOA    servidor.exemplo.com.br. root.servidor.exemplo.com.br.(
+                202609081       ; Serial
+                604800          ; Refresh
+                86400           ; Retry
+                2419200         ; Expire
+                604800)         ; Negative Cache TTL
+                IN      A       192.168.N.1
+                IN      NS      servidor
+                IN      MX      00      servidor;
+servidor        IN      A       192.168.N.1
+www             IN      CNAME   servidor
+host2           IN      A       192.168.N.2
+host3           IN      A       192.168.N.3
+host4           IN      A       192.168.N.4
+host5           IN      A       192.168.N.5
+
+Crie o arquivo com os registros reversos da zona master N.168.192.in-addr.arpa: /etc/bind/db.N.168.192
+$ORIGIN .
+$TTL    604800
+N.168.192.in-addr.arpa    IN    SOA    servidor.exemplo.com.br. root.servidor.exemplo.com.br.(
+                202609081       ; Serial
+                604800          ; Refresh
+                86400           ; Retry
+                2419200         ; Expire
+                604800)         ; Negative Cache TTL
+                NS      servidor.exemplo.com.br.
+$ORIGIN N.168.192.in-addr.arpa.
+1               PTR     servidor.exemplo.com.br.
+2               PTR     host2.exemplo.com.br.
+3               PTR     host3.exemplo.com.br.
+4               PTR     host4.exemplo.com.br.
+5               PTR     host5.exemplo.com.br.
+
+Pare e inicie o serviço:
+service named stop
+service named start
+
+
+3. Testes do Bind:
+
+Em uma outra VM, configure somente um adaptador em modo bridge, e então configure a rede (em um terminal como root):
+service NetworkManager stop
+service networking stop
+ifconfig enp0s3 down
+ifconfig enp0s3 192.168.N.2/24 up
+route add -net 192.168.N.0/24 enp0s3
+route add default gw 192.168.N.1
+
+Edite e configure o arquivo no servidor e nos clientes Linux que utilizarão o servidor: /etc/resolv.conf
+domain exemplo.com.br
+search exemplo.com.br
+nameserver 192.168.N.1
+
+Para testar nos clientes (exemplos):
+host host3.exemplo.com.br
+host host3
+host 192.168.N.3
+
+ou (se não configurado o /etc/resolv.conf)
+host host3.exemplo.com.br 192.168.N.1
+host 192.168.N.3 192.168.N.1

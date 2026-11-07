@@ -1,0 +1,636 @@
+===== PAGINA 1 =====
+Redes de Computadores
+
+
+    Aula 10
+    Qualidade  de serviço
+    Prof.José Martins Junior
+
+===== PAGINA 2 =====
+              QoS (Quality of Service)
+
+•  Define um conjunto de medidas para se caracterizar os
+   diferentes fluxos de dados que atenderão serviços distintos
+•  Parâmetros (requisitos) de QoS           definidos para um fluxo
+    –  Confiabilidade (reliability): entrega garantida de mensagens
+    –  Atraso (delay): tempo entre remessa e entrega de cada pacote
+    –  Variação do atraso (jitter): alteração no tempo de remessa, percebida
+       entre mensagens distintas de um mesmo fluxo
+    –  Largura de banda (bandwidth): capacidade de escoamento de pacotes
+       de um canal
+
+===== PAGINA 3 =====
+Aplicações e parâmetros de QoS
+
+===== PAGINA 4 =====
+                                      Buffering
+
+
+•   Técnica utilizada para a
+    redução do jitter     (variação do
+    atraso)
+     –   Os pacotes que chegam ao
+         receptor são armazenados em
+         memória antes da entrega à
+         aplicação
+
+
+
+
+
+
+
+
+
+
+
+                                                                        –   Aplicações que operam
+                                                                            sobre transmissões de
+                                                                            fluxo em tempo real
+                                                                            (reprodução de áudio e
+                                                                            vídeo, p.e) utilizam tal
+                                                                            estratégia
+
+===== PAGINA 5 =====
+                       Traffic Shapping
+
+•  A demanda pela comunicação em redes de computadores é
+   não-determinística
+    –  Uma das causas é a interação não-previsível dos usuários
+    –  Podem ocorrer momentos onde a rede apresenta pouco ou nenhum
+       tráfego, e em outros, grandes volumes de pacotes
+•  A maioria das tecnologias utilizadas em backbones da Internet
+   (links internos) são estritamente síncronas (determinísticas),
+   como a rede SONet
+•  Sendo assim, torna-se necessário utilizar uma forma de
+   regulação do tráfego de entrada em tais backbones
+   (provenientes de redes locais)
+    –  Isso permitiria utilizar racionalmente o recurso de comunicação e não
+       transferir o comportamento desajustado do tráfego, em rajadas
+       (bursts)
+
+===== PAGINA 6 =====
+         Leaky Bucket (balde furado)
+
+•  Algoritmo usado no controle de admissão (tráfego de entrada)
+•  O balde representa um buffer (memória), cujo tamanho é
+   bem conhecido
+    –  Todo tráfego que chega da rede é colocado em tal buffer assim que é
+       recebido
+    –  Os pacotes são então retirados do buffer e encaminhados em
+       intervalos regulares (sincronizados com um relógio)
+    –  Tais intervalos representam o furo no balde, que permite a saída
+       contínua e regulada
+    –  O “reservatório” (buffer), realiza a compatibilidade entre diferentes
+       taxas de transmissão de dados
+    –  Se o “balde transbordar” os pacotes começam a ser descartados
+
+===== PAGINA 7 =====
+Leaky Bucket (balde furado)
+
+===== PAGINA 8 =====
+     Token Bucket (balde de tokens)
+
+•  Também é um algoritmo para o controle de admissão
+•  O balde, neste caso, armazena previamente tokens
+    –  Tokens são adicionados a uma taxa constante
+    –  Assim que uma quantidade de tokens suficiente for armazenada, um
+       ou mais pacotes podem ser enviados
+•  O balde de tokens permite uma forma de entrada de tráfego
+   menos rígida que o balde furado
+    –  Em momentos que a rede ficar desocupada, muitos tokens podem ser
+       armazenados, o que permitirá uma vazão bem maior, em caso de
+       ocorrência de uma rajada
+    –  Dessa forma, o balde pode suportar mais entrada de tráfego sem
+       transbordar (que indicaria perda de pacotes).
+•  Uma estratégia combinada envolveria a colocação de um
+   leaky bucket atrás de um token bucket
+
+===== PAGINA 9 =====
+Token Bucket (balde de tokens)
+
+===== PAGINA 10 =====
+                Reserva de recursos
+
+•  Uma forma de se evitarem congestionamentos durante a
+   transmissão de pacotes de um fluxo, é garantir uma
+   quantidade de recursos suficientes para sua transmissão
+•  Primeiro, a rota de encaminhamento de todos os pacotes de
+   um fluxo deve ser a mesma, ou seja, algo como o
+   estabelecimento de um circuito virtual
+•  Depois, três tipos de recursos podem ser solicitados e
+   reservados em todos os roteadores do caminho
+    –  Largura de banda
+    –  Espaço em buffer
+    –  Ciclos da CPU
+
+===== PAGINA 11 =====
+                 Controle de admissão
+
+•  Quando o tráfego está bem moldado e conhece-se o caminho
+   onde um fluxo será transmitido, bem como os recursos que
+   precisará, fica simples para os roteadores aceitarem, ou não,
+   as demandas por novos fluxos
+     –  A especificação  de recursos pelo transmissor fornece argumentos
+        para roteadores definirem um conjunto de parâmetros, a fim de se
+        atender a demanda
+     –  Tal conjunto, denominado especificação de fluxo, envolve parâmetros
+        de medidas reais, como taxas e tamanhos de pacotes
+
+                                    Parâmetro              Unidade
+                          Taxa de balde de símbolos      Bytes/s
+                          Tamanho do balde de símbolos   Bytes
+                          Taxa de dados de pico          Bytes/s
+                          Tamanho mínimo do pacote       Bytes
+                          Tamanho máximo do pacote       Bytes
+
+===== PAGINA 12 =====
+                   Serviços integrados
+
+•  Os fluxos de dados de aplicações de diferentes serviços
+   devem ser transmitidos juntos (integrados)
+    –  Um caso típico são as aplicações multicast, onde se assume um grande
+       número de receptores
+    –  Ex.: transmissão de estação de rádio, via Internet
+•  A idéia básica resume-se em definir árvores multicast para
+   escoamento do tráfego da aplicação
+    –  Tais árvores ligam a origem aos diversos destinos, sendo reservados os
+       recursos (como largura de banda) necessários à transmissão
+•  Um protocolo utilizado é o RSVP (Resource reSerVation
+   Protocol), que é definido pela RFC 2055
+
+===== PAGINA 13 =====
+                     Serviços integrados
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+•   (a) a rede completa que liga os hosts (1, 2, 3, 4, e 5)
+•   (b) árvore de escoamento traçada a partir de 1 aos hosts de destino 3, 4 e 5
+•   (c) pode-se ver a árvore de escoamento de 2 para os mesmos hosts
+
+===== PAGINA 14 =====
+                    Serviços integrados
+
+
+•  Recursos reservados no caminho: sentido destino-transmissor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     –  (a) o host 3 reserva um canal com o host 1
+     –  (b) o host 3 reserva outro canal, com o host 2
+     –  (c) o host 5 reserva um canal com o host 1
+
+===== PAGINA 15 =====
+               Serviços diferenciados
+
+•  Consiste em classificar diferentes serviços a serem atendidos
+•  Para cada classe de aplicações são reservados recursos pelos
+   roteadores no caminho entre origem e destino
+    –  Ex.: priorização do tráfego de videoconferência da diretoria, em
+       relação a serviços mensageiros e salas de bate-papo
+•  Os pacotes são classificados, marcados e direcionados para
+   diferentes filas de saída, onde serão aplicadas as prioridades
+   de encaminhamento
+
+===== PAGINA 16 =====
+          Serviços diferenciados
+
+–  Encaminhamento expedido (expedited forwarding)
+    •  RFC 3246
+    •  Prevê apenas duas classes distintas de tráfego: regular e expedido
+    •  A maioria dos pacotes são definidos como regulares, e apenas
+       uma parcela como expedidos
+    •  Dessa forma pode-se dedicar uma parte da banda suficiente ao
+       atendimento prioritário do tráfego expedido
+
+===== PAGINA 17 =====
+           Serviços diferenciados
+
+–  Encaminhamento garantido (assured forwarding)
+    •  RFC 2597
+    •  Distingue 4 prioridades de classes e 3 probabilidades de descarte,
+       permitindo 12 diferentes combinações
+    •  Utiliza marcação no campo TOS do IPv4
+    •  Os pacotes são classificados, marcados e direcionados para
+       diferentes filas de saída, onde serão aplicadas as prioridades de
+       encaminhamento
+
+===== PAGINA 18 =====
+Controle de Tráfego (Traffic Control)
+
+===== PAGINA 19 =====
+        Moldagem (Traffic Shaping)
+
+•  A moldagem de tráfego pode ser entendida como a operação
+   de "atrasar" o envio de pacotes, de forma que o tráfego fique
+   dentro de um determinado limite de velocidade
+    –  Dessa forma, um shapper pode deixar um determinado tráfego mais
+       regular, ao tratar as rajadas de pacotes
+    –  O mecanismo mais comum na moldagem de tráfego é o balde de
+       tokens
+•  No Linux, uma classe (class) oferece a funcionalidade de
+   moldagem
+
+===== PAGINA 20 =====
+         Escalonamento (Scheduling)
+
+•   O escalonamento resume-se em ordenar ou reordenar os
+    pacotes para serem enviados
+     –  O método mais comum é o FIFO (First-In First-Out)
+     –  Outros métodos
+          •  SFQ (Stochastic Fair Queuing): procura dar a cada fluxo (flow) uma chance
+             de transmitir seus pacotes
+          •  RED (Random Early Detection): procura descartar pacotes de forma
+             randômica ao se atingir uma determinada condição de forma a evitar que
+             o backbone fique saturado.
+•   Uma qdisc representa a função do escalonador no Linux
+     –  Outros escalonadores disponíveis no Linux
+
+              CBQ     Class Based Queueing           TEQL      Traffic Equalizer
+              HTB     Hierarchical Token Bucket      TBF       Token Bucket Flow
+              CSZ     Clark-Shenker-Zhang            GRED      Generalized RED
+              HFSC    Hierarchical Fair Service CurveNETEM     Network Emulation
+              PRIO    Priority                       DSMARK    DiffServ Marker
+
+===== PAGINA 21 =====
+    Classificação (Traffic Classifying)
+
+•  A classificação é o mecanismo de separação de pacotes que
+   receberão diferentes formas de tratamento
+    –  O processo de classificação normalmente coloca os pacotes em
+       diferentes filas de saída
+    –  Um pacote (ou fluxo) pode ser classificado de várias maneiras
+       diferentes ao atravessar um roteador ou rede
+•  No Linux, a classificação é realizada por um filtro (filter)
+   usando um objeto classificador (classifier)
+
+===== PAGINA 22 =====
+       Policiamento (Traffic Policing)
+
+•  Mecanismo pelo qual o tráfego pode ser limitado
+    –   Permite garantir que um determinado tipo de tráfego não consuma
+        mais banda além da destinada a ele
+    –   Normalmente define-se uma taxa, que é usada como parâmetro pelo
+        policiamento para verificar se o fluxo está dentro do limite
+    –   Se passar do limite uma ação preconfigurada deve ser tomada
+         •  Normalmente, quando a taxa limite é superada, o mecanismo de
+            policiamento inicia o processo de descarte (dropping) de pacotes
+•  O policiamento no Linux é parte integrante de um filter
+
+===== PAGINA 23 =====
+       Estudo de caso:
+Controle de Tráfego no Linux
+
+===== PAGINA 24 =====
+            Qdisc (Queuing Discipline)
+
+•  Os qdiscs são as filas de saída dos pacotes, porém um qdisc
+   exerce a função de escalonador de pacotes também
+•  O Linux possui dois tipos
+     –  Qdisc classless: não pode conter classes definidas pelo usuário,
+        embora alguns deles possuam mais de uma fila de saída
+     –  Qdisc classful: pode conter subclasses definidas pelo usuário,
+        permitindo a separação e a atribuição de quantidades diferentes de
+        banda para cada tipo de fluxo
+     –  Cada interface de rede possui um qdisc root
+          •  Valor padrão no Linux é o tipo pfifo_fast.
+          •  São alocados os canais de saída (outbound traffic)
+          •  Define as principais configurações de escalonamento (qdisk)
+     –  As interfaces também possuem um qdisc ingress,
+          •  Para o tráfego de entrada (inbound traffic)
+          •  Normalmente associa-se a um policer (controle de admissão)
+
+===== PAGINA 25 =====
+                                   Class
+
+•  As classes só existem dentro dos classful qdiscs
+•  Consistem a forma de se dividir o tráfego para um tratamento
+   diferenciado
+•  Uma classe não manipula um pacote diretamente, isso é feito
+   pelo qdisc associado à ela
+•  Além da classe root, existem dois tipos de classes
+    –  leaf, que não possuem filhos
+    –  inner, que possuem filhos
+
+===== PAGINA 26 =====
+                                        Filter
+
+•   Os filtros exercem a função de separação do tráfego em
+    classes dentro de um classful qdisc
+     –  Isso é feito com o auxílio de um classificador
+•   Além disso, um filtro pode exercer a função de policer
+     –  Toma uma ação, de acordo com os limites estabelecidos para o fluxo
+        que ele está monitorando
+          •  Normalmente um filtro tem como política descartar pacotes que excedam
+             o limite estabelecido para o qdisc no qual ele está embutido
+          •  No entanto, é possível configurar outras ações como, por exemplo,
+             reclassificar o pacote utilizando outro filtro
+
+===== PAGINA 27 =====
+                                    Classifier
+
+•   Dentro de um filtro, um classificador é utilizado para
+    identificar certos padrões e/ou características dos pacotes e
+    fluxos permitindo assim a separação em classes
+•   Dois tipos de classificadores são utilizados em Linux
+     –  U32
+          •  Principal classificador do Linux, pois permite a identificação de qualquer
+             parte de um pacote IP (normalmente campos do cabeçalho)
+          •  Bastante utilizado quando é necessária a identificação de endereços IP de
+             origem/destino, portas de origem/destino ou mesmo o tipo de payload
+             (como ICMP, TCP, UDP)
+     –  FW
+          •  Procura por marcações feitas por regras do netfilter
+          •  É bastante simples pois requer apenas dois parâmetros: handle N,
+             informando qual marcação ele deve procurar e flowid X:Y, que indica em
+             qual classe deverá colocar os pacotes encontrados
+
+===== PAGINA 28 =====
+                               Classless Qdisc
+
+•   As principais classless qdiscs são: FIFO, pfifo_fast, SFQ e TBF
+
+
+
+
+
+
+
+   ◼   FIFO (First-In First-Out)
+
+         ◼   Não realiza moldagem ou reordenação
+             de pacotes
+
+         ◼   Eles simplesmente são transmitidos o
+             mais rápido possível, depois de serem
+             recebidos e enfileirados
+
+         ◼   Deve ter um tamanho limite
+             predefinido, em bytes ou em pacotes
+
+
+          ◼   Exemplos em Linux
+          tc qdisc add dev eth0 handle 1:0 root dsmark indices 1 default_index 0
+
+                ◼    Limitando a 10kB
+          tc qdisc add dev eth0 handle 2:0 parent 1:0 bfifo limit 10240
+
+                ◼    Limitando a 30 pacotes
+          tc qdisc add dev eth0 handle 2:0 parent 1:0 pfifo limit 30
+
+===== PAGINA 29 =====
+                          Classless Qdisc
+
+•  pfifo_fast
+     –  Difere-se da FIFO comum por prover
+        3 tipos diferentes de bandas para
+        separação do tráfego
+     –  O tráfego prioritário é colocado na
+        banda 0 e é sempre atendido em
+        primeiro lugar
+     –  A seguir, a banda 1 é esgotada antes
+        de atender a banda 2
+     –  A banda 2 só é atendida se não
+        houver pacotes das demais
+
+===== PAGINA 30 =====
+                            Classless Qdisc
+
+•   SFQ (Stochastic Fair Queuing)
+     –   Procura distribuir uniformemente a
+         probabilidade de cada fluxo ser atendido
+     –   Mantém internamente várias FIFO e utiliza
+         uma função hash para distribuir os pacotes
+         entre elas
+           •  Para evitar que a função hash torne-se
+              tendenciosa, utiliza um parâmetro perturb
+              que indica o período em segundos para a
+              função hash ser recalculada
+     –   As filas são então atendidas usando uma
+         função round-robin
+
+
+
+
+    ◼    Exemplo em Linux
+    tc qdisc add dev eth0 handle 1:0 root dsmark indices 1 default_index 0
+    tc qdisc add dev eth0 handle 2:0 parent 1:0 sfq perturb 10
+
+===== PAGINA 31 =====
+                                  Classless Qdisc
+
+    •   TBF (Token Bucket Filter)
+          –  Utiliza o modelo de balde de tokens para
+             moldar o tráfego
+          –  É utilizado quando se deseja apenas
+             limitar a velocidade de uma determinada
+             interface
+          –  Principais parâmetros do TBF
+                • limit: quantidade de bytes que podem
+                  aguardar na fila
+                • burst: tamanho do balde em bytes (para
+                  permitir rajadas)
+                • rate: taxa de entrada dos tokens no balde
+
+
+
+
+◼   Exemplo em Linux
+tc qdisc add dev eth0 handle 1:0 root dsmark indices 1 default_index 0
+tc qdisc add dev eth0 handle 2:0 parent 1:0 tbf burst 20480 limit 20480 mtu 1514 rate 32000bps
+
+===== PAGINA 32 =====
+                               Classful Qdisc
+
+•   A família qdisc: roots, handles,  siblings e parents
+     –   A cada interface associa-se uma root qdisc para o tráfego egresso
+           •  Vale lembrar que, além de uma qdisc de egresso, é permitida a
+              configuração para uma interface de uma ingress qdisc (para o tráfego
+              ingressante), à qual é normalmente associado apenas um policer
+     –   Cada qdisc pode ser associada a um handle  (identificador), que
+         permite configurações de novas sentenças associadas aquela                      qdisc
+           •  O handle das qdiscs possui duas partes: um major e um minor number
+                 –  É comum associar “1:” (equivalente a “1:0”) à root qdisc
+                 –  O minor number de uma qdisc é sempre 0
+                 –  As classes filhas devem ter o mesmo major number de seus pais (parent)
+
+
+
+ Exemplo de hierarquia típica, envolvendo uma qdisc, classes e subclasses
+
+===== PAGINA 33 =====
+                              Classful Qdisc
+
+•   HTB (Hierarchical Token Bucket)
+     –   Permite compartilhar um link físico, e simular diversos links lentos,
+         operando diferentes tipos de tráfego
+     –   A ferramenta/comando a ser utilizada é o tc (integrante do pacote
+         iproute), que define as abreviações para taxas
+           •  kbps significa kilobytes por segundo
+           •  kbit significa kilobits por segundo
+     –   Compartilhamento de link
+           •  As diferentes classes especificam requisitos próprios sobre o tráfego que
+              comportarão
+           •  O HTB garante que a quantidade de serviço provido por cada classe é, no
+              mínimo, a quantidade a ela associada
+           •  Quando uma classe utiliza menos que o montante associado, o excesso
+              (sobra) da banda pode ser distribuída (emprestada) para as outras classes
+           •  O compartilhamento propaga        -se hierarquicamente
+
+===== PAGINA 34 =====
+HTB: Compartilhamento de link
+
+         –  Exemplo de compartilhamento de link entre classes
+              •  “Existem dois clientes, A e B, ambos conectados à Internet
+                 via eth0. Deseja-se alocar 60kbps para B e 40kbps para A.
+                 A seguir, deseja-se subdividir a banda de A: 30kbps para
+                 WWW e 10kbps para o resto. A sobra de banda pode ser
+                 utilizada por qualquer classe que necessite.”
+
+              •  A primeira coisa a se fazer é definir uma qdisc para a
+                 interface
+                   –  O comando a seguir anexa uma qdisc HTB a eth0 e associa
+                      ao handle (identificador para futura referência) “1:”
+                         tc qdisc add dev eth0 root   handle 1: htb default 12
+                   –  O parâmetro default 12 significa que qualquer tráfego não
+                      classificado será associado à classe 1:12
+
+===== PAGINA 35 =====
+HTB: Compartilhamento de link
+
+
+            •   A seguir, especificam-se as diferentes classes associadas à
+                qdisc criada
+
+                   tc class add dev eth0 parent 1:  classid 1:1  htb rate 100kbps          ceil 100kbps
+                   tc class add dev eth0 parent 1:1 classid 1:10 htb rate  30kbps           ceil 100kbps
+                   tc class add dev eth0 parent 1:1 classid 1:11 htb rate  10kbps           ceil 100kbps
+                   tc class add dev eth0 parent 1:1 classid 1:12 htb rate  60kbps           ceil 100kbps
+
+                   –  A primeira linha cria a classe root     1:1 abaixo da   qdisc (seu pai – parent)
+                   –  Uma classe root, sob uma qdisc HTB pode permitir que suas filhas
+                      emprestem banda
+                   –  As três linhas seguintes criam as classes filhas que poderão emprestar
+                      banda umas às outras (se fossem associadas diretamente à              qdisc, isso
+                      não seria possível)
+                   –  O parâmetro     ceil indica a taxa máxima (teto) que a classe poderá
+                      transmitir, havendo sobra das demais;        se não não for especificado, o
+                      padrão (dobro de     rate) é assumido
+
+===== PAGINA 36 =====
+HTB: Compartilhamento de link
+
+
+            •  E, finalmente, deve-se estipular os critérios para filtro e
+               classificação de pacotes nas classes criadas
+
+
+                  tc filter add dev eth0   protocol  ip parent 1:0 prio 1 u32 match ip src
+                     192.168.1.0/24 match ip dport 80 0xffff flowid 1:10
+
+                  tc filter add dev eth0   protocol  ip parent 1:0 prio 1 u32 match ip src
+                     192.168.1.0/24 flowid 1:11
+
+                  –  A primeira linha define que devem ser enfileirados os pacotes IP cujo
+                     endereço de origem pertence à rede 192.168.1.0 e cuja porta de destino
+                     é 80, na classe 1:10, com prioridade 1
+                  –  A segunda linha define que devem ser enfileirados os pacotes IP cujo
+                     endereço de origem pertence à rede 192.168.1.0 (outros pacotes não
+                     atendidos pela regra anterior) na classe 1:11, com prioridade 1
+
+===== PAGINA 37 =====
+HTB: Compartilhamento de link
+
+
+           •  Opcionalmente, pode-se associar uma qdisc para cada classe
+              folha
+                 –  Se nada for dito, o padrão pfifo_fast é assumido
+
+
+                 tc qdisc add dev eth0 parent 1:10 handle 20: pfifo limit 5
+                 tc qdisc add dev eth0 parent 1:11 handle 30: pfifo limit 5
+                 tc qdisc add dev eth0 parent 1:12 handle 40: sfq perturb 10
+
+                 –  As duas primeiras linhas definem uma qdisc pfifo para as classes 1:10 e 1:11
+                 –  A terceira linha associa uma SFQ à classe 1:12, com perturb valendo 10
+
+===== PAGINA 38 =====
+HTB: Hierarquia de compartilhamentos
+
+•  Um dos problemas do exemplo anterior
+     –  Sobra de banda de uma das classes do cliente A poderá ser disputada,
+        com igual prioridade, pela outra classe de A, e também pela classe de B
+
+•  Uma forma de se resolver isso
+     –  Reagrupar (hierarquicamente) as classes irmãs sob um pai comum,
+        dentro do contexto desse cliente
+          • Esse pai comum é uma classe interna (inner class)
+          • A quantidade de serviço associada para uma inner class é, no mínimo,
+            equivalente à soma das quantidades dedicadas a seus filhos
+
+===== PAGINA 39 =====
+HTB: Hierarquia de compartilhamentos
+
+            –  Exemplo de compartilhamento hierárquico
+                  •  A configuração do controle de tráfego deve ser modificada,
+                     conforme apresenta-se a seguir
+
+                        tc class add dev eth0   parent 1:  classid 1:1  htb rate 100kbps    ceil 100kbps
+                        tc class add dev eth0   parent 1:1 classid 1:2  htb rate 40kbps     ceil 100kbps
+                        tc class add dev eth0   parent 1:2 classid 1:10 htb rate 30kbps      ceil 100kbps
+                        tc class add dev eth0   parent 1:2 classid 1:11 htb rate 10kbps      ceil 100kbps
+                        tc class add dev eth0   parent 1:1 classid 1:12 htb rate 60kbps      ceil 100kbps
+
+                        –  Uma nova classe, 1:2, é inserida na hierarquia, entre a principal e as
+                           duas classes que definem o tráfego para o cliente A, 1:10 e 1:11
+                        –  Estas últimas, agora, referenciam a nova classe como       parent
+
+===== PAGINA 40 =====
+          Práticas no laboratório
+
+• Implementação de QoS com HTB
+
+===== PAGINA 41 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p.
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p.
+•  DEVERA, Martin HTB Linux queuing discipline manual - user
+   guide. Disponível em
+   http://luxik.cdi.cz/~devik/qos/htb/manual/userg.htm
+•  BROWN, Martin A. Traffic Control HOWTO. Disponível em
+   http://www.tldp.org/HOWTO/Traffic-Control-HOWTO/
+•  HUBERT, Bert Linux Advanced Routing & Traffic Control HOWTO.
+   Disponível em http://tldp.org/HOWTO/Adv-Routing-HOWTO/

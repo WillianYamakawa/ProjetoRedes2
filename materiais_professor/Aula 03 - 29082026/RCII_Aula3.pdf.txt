@@ -1,0 +1,192 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+     Aula 3
+     Camada   de   aplicação.   Emulação   de
+     terminais virtuais (telnet), shell seguro
+     (SSH) e transferência de arquivos (FTP)
+     Prof. José Martins Junior
+
+===== PAGINA 2 =====
+                  Camada de aplicação
+
+•  Na camada de aplicação são definidos os protocolos para
+   comunicação entre programas aplicativos que atendem
+   usuários e sistemas finais
+     –  A relação entre tais aplicativos, em pares do tipo cliente-servidor,
+        define o comportamento geral de algum serviço que se utiliza da rede
+        para a comunicação de dados
+     –  Os primeiros serviços de rede foram idealizados na década de 1960, e
+        amplamente difundidos nas décadas de 1970 e 1980
+          • Aplicações para transferência de arquivos textuais ou binários, troca de
+            mensagens de texto (correio eletrônico) e emulações remotas de
+            terminais virtuais com sistemas multitarefas e multiusuários
+     –  Tais aplicações foram portadas para a Internet (FTP, SMTP e Telnet),
+        em meados da década de 1980 e se tornaram muito populares
+
+===== PAGINA 3 =====
+                 Camada de aplicação
+
+•  No início da década de 1990, surgiu um novo serviço para a
+   transferência e exibição de páginas de documentos inter-
+   referenciados, World Wide Web
+     –  Tais documentos, inicialmente compostos de texto puro (hipertextos),
+        foram rapidamente incrementados com elementos multimídia
+        (hipermídia), através da integração das extensões MIME (definidas
+        inicialmente para o serviço de correio eletrônico, para o mesmo fim)
+     –  Associou-se a isso a popularização de sistemas com janelas gráficas,
+        que permitiram interfaces mais amigáveis e uso de outros dispositivos
+        de entrada, como o mouse
+     –  A partir de 1994, com a entrada no mercado dos ISPs (Internet Service
+        Providers), muitas organizações (grandes e pequenas) viram na Web
+        um meio para negociação eletrônica de bens e serviços
+
+===== PAGINA 4 =====
+               Camada de aplicação
+
+•  Nos anos que se seguiram, pessoas comuns ao redor
+   do mundo passaram a utilizar a Web
+    – Comunicações interpessoais que envolvem troca de
+      informações, imagens (fotos e vídeos) e outros arquivos,
+      em redes abrangentes (malhas), através de relações P2P
+      (peer-to-peer)
+•  Surgiram também as Intranets
+    – Aplicam a infraestrutura da arquitetura Internet para redes
+      locais para integrar serviços apropriados a tal meio
+        • Compartilhamento de arquivos e de impressão
+        • Gerenciamento de recursos
+
+===== PAGINA 5 =====
+                        Conceitos básicos
+
+
+•   Na arquitetura Internet, os serviços tradicionais
+     –   São especificados por RFCs (Request For Comments), mantidos pela IETF
+     –   As portas servidoras dessas aplicações são registradas e mantidas pela
+         IANA (Internet Assigned Numbers Authority)
+           • Obs.: para ter uma noção das portas bem conhecidas e registradas pela IANA, edite o
+             arquivo /etc/services, em um sistema Linux.
+•   Para permitir que qualquer pessoa/organização implemente adequadamente
+    clientes e servidores para um determinado serviço, seu protocolo de
+    aplicação deve especificar
+     –   O formato das mensagens (PDUs)
+     –   O comportamento das entidades cliente e servidora nas mais diversas
+         situações, como eventos provenientes de
+           • Requisição/interação do usuário ou outra aplicação
+           • Chegada/encaminhamento de uma mensagem específica (relação entre sintaxe e
+             significado/comportamento)
+
+===== PAGINA 6 =====
+                                           Telnet
+
+
+•   Descrito pela RFC 854
+      –  Define o serviço de emulação de terminal virtual, sobre uma conexão
+         TCP e sua porta servidora padrão é a 23
+•   Contexto histórico
+      –  Terminais Virtuais (VT) foram amplamente utilizados como formas de
+         acesso a sistemas com processamento centralizado
+            •  Utilizado desde a década de 60 para a conexão de vários terminais (“burros”),
+               através de conexões seriais (RS-232), a um computador de grande ou médio porte
+            •  Através de um terminal, uma unidade de entrada (teclado) e de saída (impressora
+               ou monitor de vídeo), os dados eram inseridos e obtidos do computador central
+      –  Paradigma utilizado no ambiente multitarefa e multiusuário Unix
+            •  Um usuário (reconhecido pelo SO, através de um processo de autenticação) pode
+               submeter sequências de comandos a um interpretador que fará chamadas ao SO e
+               pode retornar resultados
+
+===== PAGINA 7 =====
+                                       Telnet
+
+•   O Telnet implementa VT em rede
+     –  Através de um NVT (Network Virtual Terminal), permite que o usuário
+        realize uma sessão de terminal virtual
+     –  Uma emulação remota (de um cliente) se comunica com um processo
+        servidor (telnetd) através da Internet
+•   O funcionamento básico desse serviço
+     –  Transporte full-duplex de fluxos de caracteres entre as duas aplicações
+        (cliente e servidora)
+          •  Em linhas gerais, cada caracter digitado pelo usuário é ecoado localmente,
+             ou seja, é encaminhado ao servidor e ecoado de volta ao cliente, para ser
+             exibido na tela
+     –  A execução de comandos pode ocasionar o envio de um fluxo de
+        caracteres do servidor para o cliente, com o resultado obtido
+          •  Exemplo: um usuário remoto executa a listagem de um ponto do File
+             System
+
+===== PAGINA 8 =====
+                                    Telnet
+
+•  O terminal virtual permite várias opções de configuração
+     –  Tipo de linguagem/caractere utilizados
+     –  Formato do terminal
+     –  Dentre outros
+•  Um dos grandes problemas do Telnet, é a segurança
+     –  Tanto os caracteres trocados durante a sessão de um terminal, como
+        até os caracteres que compõem os dados de login e senha do usuário
+        (quando da autenticação), são transmitidos de forma plana (sem
+        encriptação)
+     –  Isso permitiu o uso de programas espiões (sniffers) comprometendo a
+        utilização segura do Telnet por usuários remotos
+
+===== PAGINA 9 =====
+                                          SSH
+
+•   Definido pelas RFCs 4250 a 4254
+     –  O Secure Shell é uma implementação segura da emulação de terminal
+        virtual e define a porta servidora default 22
+     –  Dispõe de mecanismos para autenticação segura de usuários,
+        confirmação de integridade de mensagens e encriptação de conteúdo
+          •  Utiliza o algoritmo RSA de chaves assimétricas para a autenticação e troca
+             da chave de sessão
+          •  Chave de sessão gerada pelo cliente para algoritmos simétricos, como
+             3DES, AES e outros
+     –  Poder dar suporte à comunicação segura de outros tipos de aplicações
+        (transferência de arquivos, e outras, como HTTP e SMTP), através de
+        um canal (túnel) seguro
+
+===== PAGINA 10 =====
+                                            FTP
+
+•   Sua atual versão é definida pela RFC 959
+     –   O FTP (File Transfer Protocol) é o protocolo padrão para transferência
+         de arquivos na Internet
+     –   Uma das primeiras aplicações desenvolvidas para a predecessora da
+         Internet, a ARPANet
+     –   O FTP define um mecanismo para transferência de arquivos com
+         conteúdo ASCII ou binário, através do estabelecimento de duas
+         conexões TCP, às portas servidoras
+           •  21, que opera o canal de controle (comandos, etc)
+           •  20, que opera o canal de dados
+     –   Um mecanismo de autenticação permite o controle de acesso ao
+         sistema de arquivos e pode também permitir acesso anônimo
+     –   Suporta um conjunto de comandos para
+           •  Listagem do sistema de arquivos remoto, execução de comandos de shell,
+              transferência por arquivo (put ou get) ou de múltiplos arquivos, com wildcards
+              (mget, mput)
+
+===== PAGINA 11 =====
+           FTP – modos de operação
+
+•  O FTP suporta dois modos distintos de sessão
+    –  Ativo
+         •  Cliente realiza uma conexão à porta 21 do servidor, e informa o
+            número da outra porta que será utilizada para receber a conexão
+            de dados, proveniente do servidor
+         •  Esse modo de operação costuma apresentar problemas em
+            operações através de firewalls
+    –  Passivo
+         •  Cliente realiza uma conexão à porta 21 do servidor, e informa que
+            o modo será passivo
+         •  Em seguida, abre uma conexão com a porta 20 do servidor, para o
+            canal de dados
+
+===== PAGINA 12 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 7.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 26.

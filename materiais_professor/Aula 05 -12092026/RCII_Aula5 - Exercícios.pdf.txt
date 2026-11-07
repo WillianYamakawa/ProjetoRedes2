@@ -1,0 +1,17 @@
+===== PAGINA 1 =====
+                                  Escola de Engenharia de Piracicaba
+                     Redes de Computadores II – Prof. José Martins Junior
+                                             Aula 5 – Exercícios
+
+1.  Descreva passo a passo como ocorre a intermediação por um MTA, durante o processo de
+    encaminhamento de uma mensagem de correio eletrônico.
+
+2.  Por que é necessário configurar o acesso a dois servidores distintos (SMTP e POP3/IMAP) em um
+    cliente de correio eletrônico? O que cada serviço provê?
+
+3.  O SMTP foi desenvolvido inicialmente para transportar texto puro. Porém, com o tempo, o serviço
+    incorporou outros tipos de conteúdos (figuras, arquivos compactados, e outros). Que protocolo foi
+    criado para atender essa demanda? A qual camada do modelo OSI esse protocolo poderia ser
+    associado?
+
+4.  Em quais situações um servidor de e-mail (SMTP) torna-se cliente de outro servidor?

@@ -1,0 +1,45 @@
+Redes de Computadores II – Prof. José Martins Junior
+Prática – Inicialização de serviços e verificação de portas ativas (TCP e UDP)
+
+
+1. Procedimentos preliminares (Debian - VM instalada na aula de apresentação):
+
+a) Nas configurações da máquina virtual, em Rede, altere a configuração do Adaptador 1 para "Placa em modo Bridge" (escolha, em "Nome" a conexão adequada do seu hospedeiro, Ethernet ou Wireless). Em avançado, verifique se "Cabo conectado" está devidamente selecionado. Inicialize a máquina e entre com o usuário "user".
+
+b) Em um terminal virtual, mude o perfil para super-usuário (su -), atualize o sistema e instale:
+apt-get update
+apt-get dist-upgrade
+apt-get install net-tools nmap wireshark
+
+Se o wireshark já estiver instalado, execute o comando a seguir, e na janela/diálogo selecione "Sim" para autorizar usuários comuns a utilizar o wireshark:
+dpkg-reconfigure wireshark-common
+
+c) Em seguida, insira o usuário user no grupo do wireshark:
+usermod -a -G wireshark user
+
+d) Então encerre a sessão atual do LXDE e entre novamente.
+
+
+2. Execute os comandos e analise os seus resultados, em um terminal como root (su -):
+
+a) Cheque a configuração de rede:
+ip -4 a
+ifconfig
+route -n
+
+b) No mesmo terminal, execute o comando nmap para a sua máquina local (seu IP) e verifique o resultado. Repita o comando para o endereço de outra máquina da rede local.
+
+c) Refaça o item anterior, mas para checar as portas UDP abertas (nmap -sU).
+
+d) Edite e leia o conteúdo do arquivo /etc/services, que contém as portas bem conhecidas e registradas (IANA). Verifique algumas portas bem conhecidas, como: 20, 21, 22, 23, 25, 53, 80.
+
+e) Agora use o comando netstat -na --inet para listar todas as portas ativas de seu sistema.
+
+f) O comando lsof oferece a lista de arquivos atualmente abertos do sistema. Como tudo do Unix é arquivo, os sockets também. Liste os sockets registrados e seus processos com o comando lsof -i tcp (repita com a opção udp, para sockets UDP).
+
+g) Verifique no manual o funcionamento do comando tcptraceroute. Utilize-o para traçar uma rota para um host externo e porta qualquer.
+
+
+3. Execute, em um terminal do usuário comum (user):
+
+a) Utilize o wireshark para monitorar o tráfego da rede. Logo após executar o comando, na janela principal, selecione a interface da rede e start. Para obter informações sobre um pacote específico listado, basta selecioná-lo com o mouse.

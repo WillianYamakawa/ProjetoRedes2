@@ -1,0 +1,597 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 13
+    Gerenciamento de redes e SNMP
+    Prof. José Martins Junior
+
+===== PAGINA 2 =====
+  Introdução ao Gerenciamento de Redes
+
+
+• Organizações investem quantias razoáveis de tempo e
+  dinheiro em redes de computadores
+
+
+• Gerenciamento por pessoas x auto-gerenciamento
+
+
+• Gerenciamento de redes é o processo de controlar uma
+  rede de computadores complexa com o objetivo de
+  maximizar sua eficiência e produtividade
+
+===== PAGINA 3 =====
+          Áreas funcionais da ISO
+
+
+•  Para definir o escopo, a ISO 7498-4 dividiu o
+   Gerenciamento de Redes em cinco áreas funcionais, que
+   formam a abreviatura FCAPS
+       Gerenciamento de Falhas (Fault Management)
+       Gerenciamento de Configuração (Configuration Management)
+       Gerenciamento de Contabilidade (Accounting Management)
+       Gerenciamento de Desempenho (Performance Management)
+       Gerenciamento de Segurança (Security Management)
+
+===== PAGINA 4 =====
+        Gerenciamento de falhas
+
+
+•  Detectar, localizar, isolar e corrigir falhas em uma rede
+
+
+•  Envolve:
+      Detecção da falhas
+      Isolamento da falha
+      Correção da falha (se possível)
+
+===== PAGINA 5 =====
+ Gerenciamento de configuração
+
+
+•  Fazer o controle da configuração dos elementos que
+   compõem a rede
+
+
+•  O gerenciamento de configuração inclui funções para:
+      Registrar as configurações atuais e suas eventuais alterações
+      Identificar componentes da rede
+      Habilitar e desativar sistemas da rede
+      Alterar parâmetros da rede
+
+===== PAGINA 6 =====
+Gerenciamento de contabilidade
+
+
+•  Determinar os custos associados ao uso dos recursos de
+   rede
+
+
+•  O gerenciamento de contabilidade inclui funções para:
+      Informar custos
+      Permitir o estabelecimento dos limites de utilização
+      Combinar custos dos vários recursos utilizados
+
+===== PAGINA 7 =====
+Gerenciamento de desempenho
+
+
+• Determinar o desempenho dos recursos da rede, de modo
+  a assegurar que tenha capacidade para suportar as
+  necessidades de seus usuários
+
+
+• Exemplos de atividades que podem ser medidas:
+      Percentual de utilização
+      Taxas de erros
+      Tempo de resposta
+
+===== PAGINA 8 =====
+    Gerenciamento de segurança
+
+
+• Controlar o acesso aos recursos (hardware + software) da
+  rede
+
+• Deve garantir que apenas as pessoas de direito tenham
+  acesso aos recursos
+
+• O gerenciamento de segurança deve prover suporte aos
+  serviços de:
+      Controle de acesso
+      Autenticação
+      Manutenção e manipulação dos logs
+
+===== PAGINA 9 =====
+      Protocolos mais utilizados
+
+
+• CMIP
+ Common Management Information Protocol
+ Protocolo do modelo OSI/ISO
+
+• SNMP
+ Simple Network Management Protocol
+ Protocolo da arquitetura TCP/IP
+
+===== PAGINA 10 =====
+                              CMIP
+
+
+•  Utilizado em redes de telecomunicações
+
+
+•  Padrão antigo, já consolidado
+
+
+•  Bom mecanismo de segurança
+
+
+•  Complexo:
+       Demanda muitos recursos computacionais
+       Exige pessoal treinado para sua operação
+
+===== PAGINA 11 =====
+                             SNMP
+
+
+•  Padrão de facto da Internet
+
+
+•  Não proprietário, público, de fácil implementação e
+   possibilita um gerenciamento efetivo
+
+
+•  Suas maiores vantagens são a simplicidade e a facilidade
+   de implementação
+
+===== PAGINA 12 =====
+                              SNMP
+
+
+•  O termo SNMP diz respeito aos seguintes aspectos:
+  Protocolo em si
+  Definição de uma base de dados
+  Conceitos associados
+
+===== PAGINA 13 =====
+                            SNMP
+
+
+•  SNMP básico é amplamente utilizado
+
+•  Maioria dos equipamentos de conectividade
+   implementam SNMP
+
+•  É possível ter o protocolo SNMP sobre OSI e sobre
+   protocolos não TCP/IP
+
+•  Várias melhorias vêm sendo feitas:
+      Monitoramento remoto (RMON)
+      Extensões de MIB padrão
+
+===== PAGINA 14 =====
+   Arquitetura de gerenciamento SNMP
+
+
+• Um sistema de gerenciamento consiste de
+ Estação de gerenciamento
+ Agente de gerenciamento
+ Base de informações de gerenciamento (MIB)
+ Protocolo de gerenciamento
+
+===== PAGINA 15 =====
+   Arquitetura de gerenciamento SNMP
+
+
+•  Gerente
+  Entidade responsável por requisitar e analisar as informações
+   gerenciais
+
+
+•  Agente
+  Componente de hardware e/ou software responsável por enviar
+   informações do objeto gerenciado ao gerente
+
+
+•  Baseado no paradigma gerente-agente
+
+===== PAGINA 16 =====
+Arquitetura de gerenciamento SNMP
+
+
+
+
+
+
+
+
+
+
+
+                                                                         Informações
+                                                                     de Gerenciamento
+                                             SysContact: fulano@nowhere
+  Estação de                                 SysName: router
+  gerenciamento                              SysLocation: Sala 2001
+
+
+                                                            Agentes de Gerenciamento
+                                                             dos Objetos Gerenciados
+
+
+
+             Protocolo de
+             Gerenciamento
+
+===== PAGINA 17 =====
+  Estação de gerenciamento
+
+
+
+
+
+
+
+
+
+
+
+                                                                      Informações
+                                                                  de Gerenciamento
+                                          SysContact: fulano@nowhere
+Estação de                                SysName: router
+gerenciamento                             SysLocation: Sala 2001
+
+
+                                                         Agentes de Gerenciamento
+                                                          dos Objetos Gerenciados
+
+
+
+           Protocolo de
+           Gerenciamento
+
+===== PAGINA 18 =====
+      Estação de gerenciamento
+
+
+• Computador de uso geral que executa aplicações de
+  gerenciamento
+
+
+• Contém um ou mais processos que comunicam com os
+  agentes enviando requisições e recebendo respostas
+
+
+• Capacidade de traduzir os requisitos do gerente em
+  monitoramento e controle
+
+===== PAGINA 19 =====
+      Estação de gerenciamento
+
+
+• Estações de gerenciamento possuem normalmente uma
+  interface gráfica para auxiliar no processo de gerência
+
+
+• Base de dados extraída das MIBs das entidades
+  gerenciadas
+
+===== PAGINA 20 =====
+   Agente de gerenciamento
+
+
+
+
+
+
+
+
+
+
+
+                                                                      Informações
+                                                                  de Gerenciamento
+                                          SysContact: fulano@nowhere
+Estação de                                SysName: router
+gerenciamento                             SysLocation: Sala 2001
+
+
+                                                         Agentes de Gerenciamento
+                                                          dos Objetos Gerenciados
+
+
+
+           Protocolo de
+           Gerenciamento
+
+===== PAGINA 21 =====
+       Agente de gerenciamento
+
+
+• Responde às solicitações do gerente
+ Informação
+ Ação
+
+
+• Envia ao gerente informações não solicitadas
+ Mensagens trap
+
+
+• Recursos gerenciados:
+ Hardware (roteador, hub, ponte, etc)
+ Software
+
+===== PAGINA 22 =====
+Base de Informações de Gerenciamento
+                                    (MIB)
+
+
+
+
+
+
+
+
+
+                                                                        Informações
+                                                                   de Gerenciamento
+                                            SysContact: fulano@nowhere
+ Estação de                                 SysName: router
+ gerenciamento                              SysLocation: Sala 2001
+
+
+                                                           Agentes de Gerenciamento
+                                                            dos Objetos Gerenciados
+
+
+
+            Protocolo de
+            Gerenciamento
+
+===== PAGINA 23 =====
+  MIB (Management Information Base)
+
+
+• Base de dados onde são armazenadas as informações de
+  gerenciamento
+
+
+• Estrutura de árvore
+
+
+• Os objetos de uma MIB são definidos usando a notação
+  sintática abstrata (ASN.1)
+
+===== PAGINA 24 =====
+                                MIB
+
+
+•  Definição precisa da informação acessível através de um
+   protocolo de gerenciamento
+
+
+•  Utilizando formato hierárquico e estruturado (árvore), a
+   MIB define a informação de gerenciamento disponível em
+   um dispositivo
+
+
+•  Todo dispositivo deve usar o formato definido pela MIB
+
+===== PAGINA 25 =====
+           O topo da árvore da MIB
+
+
+
+
+
+
+      ccitt (0)         iso (1)                              joint-iso-ccitt (2)
+
+                      ...org (3)...
+
+                     ...dod (6)...
+
+                 ...internet (1)...
+
+directory (1)     … mgmt (2)        experimental (3)            private (4)
+
+                       mib (1)                              enterprises (1)
+
+===== PAGINA 26 =====
+Protocolo de gerenciamento
+
+
+
+
+
+
+
+
+
+
+
+                                                                      Informações
+                                                                 de Gerenciamento
+                                          SysContact: fulano@nowhere
+Estação de                                SysName: router
+gerenciamento                             SysLocation: Sala 2001
+
+
+                                                         Agentes de Gerenciamento
+                                                          dos Objetos Gerenciados
+
+
+
+           Protocolo de
+           Gerenciamento
+
+===== PAGINA 27 =====
+    Protocolo de gerenciamento
+
+
+• É o meio de comunicação entre a estação de
+  gerenciamento e os agentes
+
+
+• Define primitivas de comunicação que podem ser
+  invocadas pelo gerente e pelo agente
+
+===== PAGINA 28 =====
+Arquitetura do protocolo SNMP
+
+
+
+
+
+
+                                                           Recursos
+       Aplicações de                                      gerenciados
+       gerenciamento                                    objetos
+                                Aplicação que         gerenciados
+                               gerencia objetos
+
+
+
+
+
+
+       Gerente SNMP         Mensagens SNMP             Agente SNMP
+
+            UDP                                             UDP
+
+            IP                                              IP
+
+     Protocolo de rede                               Protocolo de rede
+                                 Rede
+
+===== PAGINA 29 =====
+ Agentes por procuração (Proxy Agents)
+
+
+• SNMP requer que o agente suporte UDP/IP
+
+• Isto exclui alguns equipamentos
+ Ex: modems
+
+• Alguns equipamentos podem suportar a arquitetura TCP/IP
+  mas pode não ser interessante ter um agente SNMP
+
+• Solução: usar agentes que atuam por procuração
+ Agentes que atuam em nome de outros dispositivos
+
+===== PAGINA 30 =====
+Agentes por procuração (Proxy Agents)
+
+
+
+
+
+
+
+
+
+                                    Proxy agent
+     Estação de               Função de mapeamento              Proxied device
+   Gerenciamento
+      Processo               Processo                               Processo
+       gerente                agente                                gerente
+        SNMP                   SNMP        Arquitetura            Arquitetura
+                                                de                     de
+                                            protocolo              protocolo
+         UDP                    UDP         usado pelo             usado pelo
+                                            dispositivo            dispositivo
+          IP                     IP         gerenciado             gerenciado
+
+      Protocolo              Protocolo       Protocolo              Protocolo
+       de rede                de rede         de rede                de rede
+
+                   Rede                                  Rede
+
+===== PAGINA 31 =====
+       SNMP protocol
+         Two ways to convey MIB info, commands:
+
+        managing       data                                          managing       data
+   server/controller                                            server/controller
+
+
+request
+
+
+             response                                         trap message
+
+
+
+          agent   data                                                 agent   data
+
+              managed device                                               managed device
+
+                        request/response mode                                                 trap mode
+
+===== PAGINA 32 =====
+SNMP protocol: message types
+
+
+   Message type                   Function
+              GetRequest         manager-to-agent: “get me data”
+         GetNextRequest          (data instance, next data in list,
+          GetBulkRequest                                          block of data).
+
+               SetRequest        manager-to-agent: set MIB value
+
+                 Response        Agent-to-manager: value, response
+                                 to Request
+                      Trap       Agent-to-manager: inform manager
+                                 of exceptional event
+
+===== PAGINA 33 =====
+    SNMP protocol: message formats
+
+
+                                       Get/set header           Variables to get/set
+                           PDU    Request  Error   Error                             ….
+message types 0-3          type   ID       Status  Index   Name  Value  Name   Value
+                           (0-3)           (0-5)
+
+
+                                              Trap header                 Trap info
+                           PDU            Agent  Trap   Specific Time               ….
+message type 4             type  EnterpriseAddr  Type   code     stamp  Name  Value
+                           4                     (0-7)
+
+                                                  SNMP PDU
+
+===== PAGINA 34 =====
+     SNMP: Management Information Base (MIB)
+
+
+                                                                                                agent   data
+         managed device’s operational (and some configuration) data
+         gathered into device MIB module
+           •  400 MIB modules defined in RFC’s; many more vendor-specific MIBs
+        Structure of Management Information (SMI): data definition
+         language
+        example MIB variables for UDP protocol:
+
+Object ID           Name                      Type                  Comments
+1.3.6.1.2.1.7.1    UDPInDatagrams      32-bit counter     total # datagrams delivered
+1.3.6.1.2.1.7.2    UDPNoPorts              32-bit counter     # undeliverable datagrams (no application at port)
+1.3.6.1.2.1.7.3    UDInErrors                 32-bit counter     # undeliverable datagrams (all other reasons)
+1.3.6.1.2.1.7.4    UDPOutDatagrams   32-bit counter    total  # datagrams sent
+1.3.6.1.2.1.7.5    udpTable               SEQUENCE          one entry for each port currently in use
+
+===== PAGINA 35 =====
+                          Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 8.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 32.
+
+•  KUROSE, J. F.; ROSS, K. W. Redes de computadores e a internet:
+   uma abordagem top-down. 8. ed. São Paulo, SP: Bookman,
+   2021. E-book.

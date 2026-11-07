@@ -1,0 +1,327 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 7
+    Serviços    de    arquivos    (SAMBA)    e
+    impressão (CUPS)
+    Prof. José Martins Junior
+
+===== PAGINA 2 =====
+                                   História
+
+
+•  1984
+     –  API da IBM com funções básicas de comunicação em rede entre hosts
+        para uma rede pequena (72 nós),  mas faltava um protocolo de
+        transporte
+•  1985
+     –  IBM lança um protocolo de transporte
+     –  Este protocolo + API (NetBIOS) = NETBEUI
+•  A seguir surgiram outros protocolos
+     –  Aparecem implementações de NetBIOS API para TCP/IP, IPX, DECNet
+•  Microsoft e Intel criam o “Core Protocol”
+     –  SMB/CIFS file sharing protocol
+     –  Adota o NetBIOS sobre TCP (NBT) para troca de pacotes (1987)
+     –  Este esquema se torna o mecanismo padrão para compartilhamento
+        de arquivos dos Sistemas Operacionais Windows
+
+===== PAGINA 3 =====
+                             CIFS e SMB
+
+•  Common Internet File System
+    –   Muito usado pela Microsoft
+         •  Núcleo de uma rede Microsoft é o CIFS (SMB)
+    –   Padrão aberto, criado pela IETF
+         •  Filosofia Cliente - Servidor
+         •  Alto nível: opera camada Aplicação/Apresentação
+         •  Usa, como camada de transporte, NetBIOS over TCP (NBT)
+         •  “esconde” a rede e permite compartilhamento de discos (função
+            mais importante) e impressoras remotas como se fossem locais
+            (com autenticação de usuários), browsing, etc
+    –   SMB
+         •  Server Message Block
+         •  O coração do CIFS (às vezes definidos como sinônimos)
+
+===== PAGINA 4 =====
+                              CIFS
+
+• Clientes trocam mensagens com servidor, a fim de
+  acessarem recursos neste
+   –  Através do Server Message Blocks (SMB) Protocol
+
+===== PAGINA 5 =====
+                  Mensagens SMB
+
+• Utilizam uma sessão NetBIOS, como base
+• Algumas mensagens
+   –  Conectar/desconectar de compartilhamentos de arquivo e
+      impressão
+   –  Abrir/fechar arquivos
+   –  Ler/escrever arquivos
+   –  Pesquisar diretórios
+   –  Atribuir/obter atributos de arquivos
+
+===== PAGINA 6 =====
+Estrutura de Camadas
+
+===== PAGINA 7 =====
+  NetBIOS (RFCs 1001 e 1002) 1987
+
+•  Provê 3 serviços
+    –  Nomes (Name services)
+        • Análogo ao DNS da Internet, mas os métodos para registro de
+          nomes são bem diferentes
+        • Nomes compreensíveis
+        • Nomes vistos no “Network Neighbourhood”
+    –  Sessões (Session Services)
+    –  Datagrama (Datagram Service)
+        • Baixo overhead, não confiável, pouco usado
+
+===== PAGINA 8 =====
+                NetBIOS: Nomes
+
+
+
+
+
+
+
+
+
+•  16 bytes
+    – 15 descrevem o recurso (computador, domínio, usuário)
+    – 1: identifica quais propriedades o recurso possui
+
+===== PAGINA 9 =====
+                Comando NBTSTAT
+
+
+
+C:\>nbtstat -n
+
+Wi-Fi:
+Endereço-Ip nó: [192.168.25.212] Identificador de escopo: []
+
+            Tabela de nomes locais de NetBIOS
+
+       Nome               Tipo         Status
+    ---------------------------------------------
+    DESKTOP-97IPPSG<20>  EXCLUSIVO   Registrado
+    DESKTOP-97IPPSG<00>  EXCLUSIVO   Registrado
+    WORKGROUP      <00>  GRUPO       Registrado
+    WORKGROUP      <1E>  GRUPO       Registrado
+
+===== PAGINA 10 =====
+Recursos “Unique” do NetBIOS
+
+   Named Resource                                             Hexadecimal Byte Value
+
+
+   Standard Workstation Service                           00
+   Messenger Service (WinPopup)                           03
+   RAS Server Service                                     06
+   Domain Master Browser Service
+   (associated with primary domain controller)            1B
+   Master Browser name                                    1D
+   NetDDE Service                                         1F
+   Fileserver (including printer server)                  20
+   RAS Client Service                                     21
+   Network Monitor Agent                                  BE
+   Network Monitor Utility                                BF
+
+===== PAGINA 11 =====
+   Recursos “group” do NetBIOS
+
+
+
+
+Named Resource                              Hexadecimal Byte Value
+Standard Workstation group                          00
+Logon Server                                        1C
+Master Browser name                                 1D
+Normal Group name (used in browser elections)       1E
+Internet Group name (administrative)                 20
+<01><02>__MSBROWSE__<02>                             01
+
+===== PAGINA 12 =====
+                      NetBIOS: Sessão
+
+•  Troca de mensagens entre um par de aplicativos NetBIOS
+    –  Full-duplex, confiável e sequenciado
+    –  Porta 139 (NetBIOS sobre TCP - NBT)
+    –  Não é stream oriented, com o TCP
+•  Comandos
+    –  Call: inicia uma sessão full-duplex NetBIOS
+    –  Listen: Espera por um comando Call NetBIOS
+    –  Hang up: termina sessão
+    –  Send: envia mensagens (do SMB)
+    –  Receive: recebe mensagens
+    –  Session Status: não usado pelo CIFS....
+•  CIFS usa uma sessão NetBIOS para enviar e receber
+   comandos, como vistos anteriormente
+
+===== PAGINA 13 =====
+              Resolução de Nomes
+
+•  Broadcast (usado pelo NetBIOS original)
+    – Cliente que procura por uma máquina m1 anuncia na rede
+      “onde você está?” e espera que ela responda
+    – Gera tráfego de broadcast (aceitável em uma LAN)
+
+•  NBNS (NetBIOS Name Service): WINS
+    – As máquinas deixam seus nomes e números em um
+      servidor (daí, servidor WINS) para que os outros vejam
+    – O servidor WINS mantém dados em um Banco
+    – Quando um integrante procura outro, este manda o nome
+      do destino para o servidor que retorna o seu número
+
+===== PAGINA 14 =====
+
+
+===== PAGINA 15 =====
+                          Browsing
+
+•  Eleição para escolher o Local Master Browser (LMB)
+    – Retém um nome NetBIOS especial (além do seu nome)
+    – Mantém a lista de serviço que aparece na janela “Window
+      Neighbourhood”
+
+•  Domain Master Browser (DMB)
+    – Coordena as listas entre Domínios
+    – Troca e combina listas com o LMB, assim elas podem ser
+      propagadas por todos os hosts
+
+===== PAGINA 16 =====
+             WorkGroup X Domains
+
+•  WorkGroup
+    – Coleção de máquinas onde cada qual define sua própria
+      segurança
+    – Segurança descentralizada
+
+•  Domain
+    – Coleção de computadores para a qual a segurança é
+      centralizada pelos Controladores de Domínio (Domain
+      Controllers) - senhas, usuários, horas de uso, etc.
+    – Usuário “loga” uma única vez e tem acesso a todos os
+      serviços autorizados naquela rede
+
+===== PAGINA 17 =====
+                                SAMBA
+
+•  Conjunto de ferramentas de código aberto que provê serviços
+   de acesso a arquivos e impressoras em rede, para clientes
+   SMB (Server Message Block)
+•  Foi originalmente desenvolvido por Andrew Tridgell, que
+   desejava simular um nó SMB em uma máquina Unix
+    –  Utilizou um sniffer para descobrir, através de engenharia
+       reversa, detalhes da implementação do protocolo
+    –  Publicou o experimento em 1992 e ignorou-o depois
+         • Anos depois, soube que desenvolvedores Linux implementaram e
+           documentaram o SMBserver baseado em seu experimento
+         • Renomeou o projeto para Samba, pois o nome SMB era
+           patenteado (ele descobriu o nome samba por acaso, procurando
+           palavras que continham as letras smb em um dicionário
+           eletrônico)
+
+===== PAGINA 18 =====
+       Funcionalidades do SAMBA
+
+• Serviços de Arquivos e Impressão
+• Autenticação e Autorização
+• Resolução de Nomes
+• Browsing (anúncio de serviços)
+   –  Lista de serviços (arquivos e impressoras compartilhadas)
+      oferecidas pelos computadores
+• Dois programas principais compõem o Samba
+   –  smbd e nmbd
+
+===== PAGINA 19 =====
+                          SMBD e NMBD
+
+•  SMBD
+     –  Responsável pelos serviços de diretórios e impressão
+          •  Quais (e como) arquivos e impressoras serão vistos pelas máquinas
+             Windows
+     –  Autenticação de “share mode” e “user mode”
+          •  Share mode: atribui uma senha para o diretório ou impressora
+          •  User mode: cada usuário tem senha para o serviço
+
+•  NMBD
+     –  Resolução de nomes
+     –  Browsing
+          •  Network Neighbourhood
+          •  Nada a ver com Browsing de Internet
+     –  Gerenciamento e distribuição de listas de nomes NetBIOS
+
+===== PAGINA 20 =====
+   Portas e configuração do SAMBA
+
+•  As portas servidoras relacionadas ao serviço, são
+    –  137 (netbios-ns): NETBIOS Name Service
+    –  138 (netbios-dgm): NETBIOS Datagram Service
+    –  139 (netbios-ssn): NETBIOS Session Service
+    –  445 – microsoft-ds Win2k+ Server Message Block
+
+•  A configuração é normalmente realizada em um único
+   arquivo, o smb.conf (geralmente em /etc/samba/smb.conf)
+    –  Uma opção é utilizar o Swat (Samba Web Administration Tool) ou o
+       Pagode, ambos utilitários de configuração via Web
+
+===== PAGINA 21 =====
+                 Utilitários do SAMBA
+
+•  Alguns utilitários para operação do Samba
+    –  nmblookup – faz pesquisas no servidor de nomes NetBIOS
+    –  smbpasswd – permite criar/alterar senhas de usuários do Samba
+    –  smbclient – cliente para acesso a um servidor SMB/CIFS. Possui uma
+       interface parecida com a do cliente FTP
+    –  smb(u)mount – montar/desmontar sistemas de arquivos SMB
+
+===== PAGINA 22 =====
+                                    CUPS
+
+•  Common UNIX Printing System
+    –  Proporciona um meio de impressão portátil e padronizado
+       para os sistemas baseados em Unix
+    –  Usa o IPP (Internet Printing Protocol), RFC 2910
+         •  Sistema de impressão completo, que suporta novas impressoras,
+            dispositivos e protocolos
+         •  Realiza gestão básica de trabalhos e filas de impressão
+         •  Permite integração com LPD (Unix), SMB (Windows) e AppSocket
+            (Macintosh)
+         •  Permite localização de impressoras na rede e PPD (PostScript
+            Printer Description) baseados em opções de impressão
+
+===== PAGINA 23 =====
+           Características do CUPS
+
+
+
+
+ Interface web (porta 631, do IPP) para administração
+  de impressoras e filas de impressão
+
+ Permite a instalação de impressoras PDF
+
+
+ Filtragem extensível de arquivos e interfaces backend
+  de dispositivos
+
+ Quotas e administração de trabalhos e páginas
+
+
+ Serviços de diretório de impressoras em rede
+
+
+ Função de encriptação
+
+===== PAGINA 24 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 7.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 27.

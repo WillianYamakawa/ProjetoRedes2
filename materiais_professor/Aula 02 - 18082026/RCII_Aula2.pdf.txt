@@ -1,0 +1,151 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 2
+    Controle  de  fluxo e congestionamento
+    pelo protocolo  TCP
+    Prof.José Martins  Junior
+
+===== PAGINA 2 =====
+Processo de conexão TCP
+
+
+                      •   O TCP utiliza a técnica three-way        handshake
+                          para estabelecimento e encerramento de
+                          conexões
+                            –  A princípio, o servidor deve estar em estado
+                               de LISTENING e ter executado uma chamada
+                               bloqueante de um ACCEPT, aguardando uma
+                               conexão
+                            –  O cliente então pode solicitar uma conexão
+                               (CONNECT), que enviará um TCP com os
+                               flags SYN=1 e ACK=0
+                            –  No destino, a entidade TCP checará se a
+                               porta escolhida esta aceitando conexões,
+                               senão envia uma resposta com o flag       RST=1,
+                               rejeitando a conexão
+                            –  Se tudo certo, ela pode aceitar a conexão,
+                               através de uma confirmação
+                               (acknowledgment), com os flags      SYN=1 e
+                               ACK=1
+                            –  O processo de encerramento de uma
+                               conexão é semelhante
+
+===== PAGINA 3 =====
+      Processo de confirmação no TCP
+
+
+
+
+
+◼  TCP usa Confirmação Positiva
+   com Retransmissão para
+   conseguir entrega de dado
+   confiável
+
+     ◼  Destinatário envia uma
+        mensagem de controle com
+        Confirmação
+        (Acknowledgment - ACK) para
+        a origem verificar a entrega da
+        mensagem com sucesso
+
+     ◼  O originador inicializa o
+        relógio, se o tempo expira
+        antes da confirmação, ele
+        inicia o relógio e retransmite
+
+===== PAGINA 4 =====
+   Controle do tempo de expiração
+
+•  Tempo de expiração elevado pode causar baixa eficiência
+    –  Deve ser diferente para cada conexão e inicializado dinamicamente
+         • Hosts na mesma LAN deve ser menores que  entre hosts entre 20 hops
+         • Tempo de entrega na Internet muda dinamicamente, tempo de expiração
+           deve se adequar
+
+===== PAGINA 5 =====
+                     Valor do timeout
+
+•  O tempo expiração é baseado em RTT (Round Trip Time)
+    –  Emissor não pode prever o RTT antes de uma transmissão
+    –  Então define o RTO (Retransmission Timeout) baseado em um prévio RTT
+
+•  Método é chamado de Algoritmo de Retransmissão Adaptativo
+    –  Média Ponderada para RTT:
+         RTTnew = (alpha*RTTold) + ((1  - alpha)*RTTsample))
+    –  Cálculo de RTO
+         RTO = beta*RTTnew
+
+===== PAGINA 6 =====
+   Gerenciamento de janela no TCP
+
+•  TCP usa janela deslizante
+   para controle de fluxo
+•  Destinatário especifica o
+   tamanho da janela
+   (window advertisement)
+    –  Descreve quais bytes do
+       stream podem ser
+       enviados
+    –  Transportado como ACK
+         • Receptor envia uma
+           confirmação para o
+           próximo byte que pode
+           ser enviado do fluxo
+           atual, e o número de
+           bytes que pode aceitar
+
+===== PAGINA 7 =====
+     Síndrome da janela boba (silly)
+
+•  O algoritmo janela deslizante pode resultar na transmissão de
+   muitos segmentos pequenos
+    –  Se a janela do destinatário estiver cheia, e a aplicação destino
+       consumir poucos bytes, o destinatário avisará a origem sobre uma
+       janela muito pequena
+    –  Se a origem enviar uma quantidade de dados para completá-la a cada
+       vez que a aplicação consumir um pouco dos dados, o uso da banda
+       tornar-se ineficiente
+•  Duas soluções possíveis
+    –  O destinatário pode atrasar a informação de mais janelas livres
+    –  A origem pode atrasar o envio até receber um tamanho de janela
+       satisfatório
+
+===== PAGINA 8 =====
+ Controle de congestionamento
+
+
+                                     •   A camada de transporte pode detectar o
+                                         congestionamento da rede pelo RTT das
+                                         confirmações e confirmações não recebidas
+                                     •   É utilizada uma janela de congestionamento
+                                           –   Inicialmente tal janela tem um tamanho mínimo,
+                                               que indica o volume total de mensagens que
+                                               pode ser encaminhado à rede antes de receber
+                                               uma confirmação (mensagens pendentes)
+                                           –   À medida que o RTT médio das confirmações
+                                               diminui, a janela é aumentada gradativamente, e
+                                               vice-versa
+                                           –   Quando detectado um congestionamento (por
+                                               timeout da confirmação), a janela é reduzida
+                                               drasticamente, mas pode voltar a crescer, com o
+                                               passar do tempo
+
+
+
+◼   Explorado pelo RED (Random Early Detection/Discard/Drop)
+
+     ◼   Aplica descarte seletivo (de determinados fluxos) para reduzir o throughput de
+         conexões pela redução das janelas de congestionamento
+
+===== PAGINA 9 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. – Capítulo
+   6
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. – Capítulos
+   23 e 24

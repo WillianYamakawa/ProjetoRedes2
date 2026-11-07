@@ -1,0 +1,16 @@
+===== PAGINA 1 =====
+                                  Escola de Engenharia de Piracicaba
+                     Redes de Computadores II – Prof. José Martins Junior
+                                             Aula 4 – Exercícios
+
+1.  Por que é que o FTP define duas portas servidoras distintas? Qual é a principal diferença entre os
+    modos do FTP, passivo e ativo?
+
+
+2.  Para que serve o telnet? Por que foi considerada uma aplicação vulnerável? Explique como o SSH
+    resolveu o problema de vulnerabilidade do Telnet.
+
+
+3.  De que forma um servidor DNS procede para resolver o seguinte nome (FQDN) que não está sob
+    sua autoridade? Considere que o servidor foi iniciado neste momento.
+            vacinapira.piracicaba.sp.gov.br

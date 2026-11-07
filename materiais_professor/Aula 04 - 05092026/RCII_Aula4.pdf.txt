@@ -1,0 +1,134 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 4
+    Serviço de nomes (DNS)
+    Prof. José Martins Junior
+
+===== PAGINA 2 =====
+       DNS – Domain Name System
+
+•  Endereços IP de hosts (interfaces) possuem 32 bits
+    –  São eficientes à comunicação TCP/IP
+    –  Porém inadequados à memorização humana
+    –  Outro problema é que a divisão de endereços IP não faz
+       referência geográfica (ou outra qualquer)
+•  O DNS provê tradução entre nomes simbólicos e endereços IP,
+   e é definido pelas RFCs 1034 e 1035
+    –  Os nomes completos (FQDN – Fully-Qualified Domain
+       Name) são compostos por sequências de alfanuméricos
+       separados pontos
+        • Parte mais à esquerda: nome do host
+        • Parte da direita: domínio (e sua hierarquia)
+
+===== PAGINA 3 =====
+                    Hierarquia do DNS
+
+•  A estrutura hierárquica do DNS define domínios de alto nível
+   (TLDs - Top level domains) através de uma autoridade global
+   (InterNIC), que são classificados
+         Por atividade:                                  Geográficos:
+         .com - Commercial organization                  .br - Brazil
+         .edu - Educational institution                  .fr - France
+         .gov - Government organization                  .ca - Canada
+
+===== PAGINA 4 =====
+          Subordinação de domínios
+
+•  Uma organização pode registrar seu nome de domínio,
+   aplicado a um TLD (global ou de um país)
+    –  usp.br - domínio da USP (o Registro.br demorou a criar o .edu)
+    –  terra.com.br - domínio do Terra
+•  Uma organização pode determinar sua própria estrutura
+   interna - cada domínio tem autoridade para criar subdomínios
+    –  Cada domínio/subdomínio delimita uma zona de autoridade
+    –  Domínios são conceitos lógicos e não necessitam corresponder à
+       distribuição física
+    –  Ex.: host idg do subdomínio receita do domínio fazenda.gov.br
+             idg.receita.fazenda.gov.br
+
+===== PAGINA 5 =====
+                         Registros do DNS
+
+
+•   Cada registro deve ser único e inclui nome de domínio, tipo do registro
+    (RR) e IP
+     –  Ex.:
+                servidor        IN      A       192.168.0.1
+•   Tipos de registros possíveis em uma base DNS definidos pela RFC 1034
+     –  A - mapeia um nome a um endereço IP
+     –  CNAME - alias de um nome de domínio
+     –  HINFO - tipo de CPU e SO do host
+     –  MX (Mail eXchanger) - mapeia os mail servers de um domínio
+     –  NS - DNS autoritativo para o domínio
+     –  PTR - ponteiro para a outra parte do domínio
+     –  SOA - identifica o início da zona de autoridade
+     –  A classe IN, em um registro, indica que o sistema é Internet
+     –  Um TTL (time-to-live) expressa o tempo de vida de um registro em segundos
+        (através de um inteiro de 32 bits)
+
+===== PAGINA 6 =====
+                Zonas de autoridade
+
+•  As zonas de autoridade consistem regiões da hierarquia sob a
+   autoridade de um servidor
+    –  Pode consistir um único domínio, subdomínio, ou grupos destes
+    –  Pode ser atribuída a um servidor cujo nome não pertence àquela zona
+
+===== PAGINA 7 =====
+              Cliente-servidor no DNS
+
+•  Nomes de domínio são gerenciados pela hierarquia de
+   servidores DNS (associada às zonas de autoridade)
+     –  O servidor “Raiz” no topo da árvore detém os registros que descrevem
+        servidores do próximo nível (e assim sucessivamente)
+     –  Vários servidores podem ser colocados em uma organização,
+        satisfazendo o requisito do paradigma da localidade
+•  A interação se dá pela troca de mensagens:
+     –  DNS request - contém o nome a ser resolvido
+          • Encaminhada por um resolver, que consiste o cliente do serviço (pode ser
+            uma função de API, como o gethostbyname – sockets)
+     –  DNS reply - contém o endereço IP para o nome solicitado
+          • É encaminhada pelo servidor DNS (autoridade pela zona do registro)
+
+===== PAGINA 8 =====
+                Cliente-servidor no DNS
+
+•   Um servidor é autoridade sobre os nomes da zona que gerencia
+     –   Se a solicitação contém um nome gerenciado pelo servidor receptor, este
+         responde diretamente
+     –   Caso contrário, a solicitação deve ser encaminhada ao servidor
+         autoritativo apropriado, através de uma busca iterativa
+           •  Primeiramente a requisição é enviada ao nó raiz, que informa quem responderá pela
+              resolução do TLD
+           •  Quando este for consultado, informará quem responde pela autoridade do próximo
+              nível, até ser encontrada a autoridade pelo domínio desejado, que pode resolver a
+              requisição
+     –   Para se evitar que todas as requisições sejam feitas diretamente à
+         autoridade, um DNS pode atuar como resolver (cliente) e representar tais
+         solicitações
+           •  Um servidor DNS pode manter em um cache os registros que já resolveu por um certo
+              período de tempo (baseado no tempo de vida do registro, anunciado pelo servidor
+              autoritativo)
+
+===== PAGINA 9 =====
+            Cliente-servidor no DNS
+
+•  Note que um servidor DNS, ao realizar a solicitação pela
+   resolução de nomes, no lugar do cliente de origem, torna-se
+   cliente do servidor autoritativo (e dos anteriores na
+   hierarquia)
+•  A porta padrão do servidor DNS é a 53
+•  Uma implementação muito difundida do DNS é o BIND
+   (Berkeley Internet Name Domain), mantida e disponibilizada
+   pelo ISC (Internet Systems Consortium)
+
+===== PAGINA 10 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 7.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 25.

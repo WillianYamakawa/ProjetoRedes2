@@ -1,0 +1,662 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 9
+    Segurança:  requisitos,  vulnerabilidades
+    e políticas
+    Prof. José Martins Junior
+
+===== PAGINA 2 =====
+                   Motivação 1/3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Defacement de site da PF – dia 25/01/2023            Fonte: http://www.zone-h.org/
+
+===== PAGINA 3 =====
+Motivação 2/3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           Fonte: https://stats.cert.br/
+
+===== PAGINA 4 =====
+Motivação 3/3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           Fonte: https://stats.cert.br/
+
+===== PAGINA 5 =====
+  Requisitos de um sistema seguro
+
+• Disponibilidade
+   – O sistema deve funcionar adequadamente, sem
+     degradação de acesso, fornecendo recursos aos
+     usuários autorizados
+• Integridade
+   – A informação deve permanecer intacta e
+     inalterada por acidentes e ataques
+• Confidência
+   – A informação deve ser acessada somente por
+     pessoas autorizadas para tal
+
+===== PAGINA 6 =====
+               Ameaças à informação
+
+•  Interceptação
+    –  Acesso não autorizado à informação ou sua cópia ilegal
+    –  Ameaça ao requisito de confidência
+•  Interrupção
+    –  Quando a informação torna-se inacessível
+    –  Indisponibilidade de um serviço ou destruição dos dados
+    –  Compromete o requisito de disponibilidade
+•  Modificação
+    –  Alteração não autorizada/especificada dos dados ou em serviços
+    –  Em redes geralmente precedida pela interceptação
+    –  Fere o requisito de integridade
+•  Fabricação/falsificação
+    –  Criação de dados ou de eventos que não deveriam existir
+
+===== PAGINA 7 =====
+       Uma análise dos riscos - 1/2
+
+• Segurança física e lógica
+   –  Ambientes distribuídos, heterogêneos e complexos
+   –  Operação e administração decentralizadas
+   –  Complexidade e vulnerabilidade do sistema são
+      diretamente proporcionais
+
+• Elementos de um sistema computacional distribuído
+   –  Hardware
+   –  Software
+   –  Rede
+   –  Usuários
+
+===== PAGINA 8 =====
+      Uma análise dos riscos - 2/2
+
+                      O perfil do atacante
+
+
+                         Quem?         Por quê?
+
+                      Criminoso        Dinheiro, fama, atenção
+               Espião industrial       Acesso a recursos adicionais
+        Agência de espionagem          Vantagem em competição
+         Adolescente estudante         Curiosidade, vandalismo
+      Funcionário da empresa!!!        Vingança
+             Qualquer pessoa ...       Despreparo
+
+Qualificação: Expert / Oportunista / Desavisado
+
+===== PAGINA 9 =====
+Evolução: ataques x conhecimento
+
+===== PAGINA 10 =====
+                                  Sniffer
+
+•  Monitor promíscuo que intercepta o tráfego de pacotes
+•  Atua em redes de difusão (broadcasting)
+    –  Conteúdos sem encriptação são obtidos facilmente pelo atacante
+    –  Utilizado principalmente para a obtenção de senhas
+
+===== PAGINA 11 =====
+                           Scanner
+
+•  Submete pesquisas a um host (ou vários)
+    – Objetivo de obter informações sobre o sistema, como
+      portas servidoras (aplicações) que estão operantes
+•  Comportamento comum
+    – Realiza conexões ou envia pacotes de reconhecimento
+      para todas as (ou parte das) portas do sistema
+•  Geralmente precede um probe (tentativa de acesso)
+    – Consiste normalmente do primeiro passo de um ataque
+      (reconhecimento de área)
+
+===== PAGINA 12 =====
+                               Probe
+
+•  Tentativas sucessivas de acesso a aplicações
+    – Objetivo de testar a facilidade de acesso às aplicações
+      servidoras
+•  Comportamento comum
+    – Tentativas sucessivas de acesso às aplicações servidoras
+    – São usadas senhas óbvias ou vulnerabilidades conhecidas
+      dos serviços em execução
+    – Obtenção de dados sobre versões das aplicações e do
+      sistema operacional
+•  Uso de ferramentas e kits (exploits) prontos
+
+===== PAGINA 13 =====
+                         SYN Attack
+
+•  Explora uma deficiência do protocolo TCP
+    – O alto custo de uma conexão de serviço ao SO
+•  Procura consumir as conexões do servidor
+    – Solicitam inúmeras requisições SYN consecutivas
+    – Não devolvem o ACK para o servidor
+    – Servidor satura-se de conexões pendentes (aguardando
+      timeout do ACK) e pode deixar de atender clientes
+
+===== PAGINA 14 =====
+            DoS (Denial of Service)
+
+•  Saturação da rede (“flood”) ou das conexões
+    – Normalmente são utilizados ataques SYN
+    – Interrompe serviços e comunicações
+•  Compromete o requisito de disponibilidade
+    – Impossibilita usuários do acesso a um serviço
+•  Difícil de se rastrear
+    – Origens são falsificadas (IP spoofing)
+
+===== PAGINA 15 =====
+               DDoS (Distributed DoS)
+
+•  Surgiu na segunda metade de 1999
+•  Comportamento geral
+     –  Comprometimento de hosts
+          • Scan em um grande número de hosts
+          • Invasão e instalação de ferramentas de ataque nos hosts
+     –  Coleta de dados
+          • Instalação de sniffers
+          • Envio dos dados coletados a um servidor central
+     –  Amplificação de um DoS
+          • Até centenas de daemons distribuídos originarão o ataque
+          • Ataques smurf* distribuídos multiplicam-se muitas vezes
+          • Comprometem um site, uma rede ou até grandes domínios
+     –  Hosts e até redes inteiras ficam inacessíveis
+
+
+        (*) Smurfs são ataques realizados através do envio de mensagem ICMP echo ao endereço
+        broadcast de uma subrede. O endereço IP de origem é forjado com o do alvo pretendido
+
+===== PAGINA 16 =====
+DDoS (Distributed DoS)
+
+===== PAGINA 17 =====
+DDoS (Distributed DoS)
+
+===== PAGINA 18 =====
+DDoS (Distributed DoS)
+
+===== PAGINA 19 =====
+DDoS (Distributed DoS)
+
+===== PAGINA 20 =====
+    Trojan horses e Malicious Code
+
+•  Envolvem diretamente os usuários do sistema
+    – Exploram falhas no ambiente do usuário como antivírus
+      desatualizado e aplicativos vulneráveis
+•  Propagação em grande escala
+    – Utilizam informações do usuário como listas de endereços
+      (e-mail) para a geração de SPAMs
+    – Capacidade de mutação
+•  Consequências graves
+    – Criação backdoors para o processo de propagação ou para
+      futuro comprometimento do sistema
+    – Danos em arquivos do usuário e do sistema
+    – Sobrecarga na rede e em servidores
+
+===== PAGINA 21 =====
+   Evolução dos códigos maliciosos
+
+•  Backdoors
+    –  Furos de aplicações ou instalados pelo usuário desavisado
+    –  Abriam portas servidoras, permitindo acesso de fora
+•  Malwares
+    –  Uso de NAT
+        • Escondeu as portas servidoras das máquinas da Intranet
+        • O que motivou a evolução dos malwares para clientes
+    –  Firewall e proxy
+        • Os malwares clientes não podem mais acessar portas externas
+        • Os malwares passaram a comunicar por protocolos Web (HTTP)
+•  Portanto, propagam-se com a ajuda dos usuários e se
+   valem dos acessos que eles têm
+
+===== PAGINA 22 =====
+   Comunicação de ocorrências 1/2
+
+•  Comunicação de ocorrências à origem
+    –  e-mail, telefone, carta registrada
+
+•  Dados podem ser obtidos
+    –  Consultar DNS (host hostname/IP)
+    –  Consultar o registro:
+         • whois domain
+         • https://registro.br/2/whois
+    –  Localizar domínios superiores (ex.: ISPs)
+         • traceroute hostname/IP_address
+         • http://registro.br/cgi-bin/nicbr/trt
+
+===== PAGINA 23 =====
+   Comunicação de ocorrências 2/2
+
+•  Comunicação de ocorrências ao CERT.br
+    –  Centro de Estudos, Resposta e Tratamento de Incidentes de Segurança
+       no Brasil
+•  Incidentes a serem reportados (entre outros)
+    –  Alertas de acesso (ou tentativa) não autorizado a um sistema ou a seus
+       dados
+    –  Paralisação de serviço não desejada (DoS)
+    –  Uso não autorizado de um sistema para processamento ou
+       armazenamento de dados
+    –  Alterações no sistema (hardware, firmware ou características de
+       software) sem conhecimento, instrução ou consentimento do
+       proprietário
+
+
+
+                                                Acesse: http://cartilha.cert.br/
+
+===== PAGINA 24 =====
+                   Legislação do cybercrime
+
+
+
+
+                                 Aprovado projeto de lei contra cibercrimes
+Aprovada em 09/07/2008 pelo Plenário do Senado, a proposta substitutiva ao Projeto de Lei da
+Câmara 89/2003 conceitua juridicamente crimes cometidos no universo da informática, seja em redes
+privadas ou na Internet.
+Parecer nº 657, de 2008: http://www.senado.gov.br/atividade/materia/getTexto.asp?t=13674&c=RTF
+. . .
+O projeto altera o Código Penal, o Código Penal Militar, a Lei dos Crimes Raciais (Lei nº 7.716 de
+1989) e o Estatuto da Criança e do Adolescente (Lei nº 8.069, de 1990).
+. . .
+1. Acesso não autorizado a rede de computadores, dispositivo de comunicação ou sistema
+informatizado.
+Art. 285-A (Código Penal). Acessar, mediante violação de segurança, rede de computadores,
+dispositivo de comunicação ou sistema informatizado, protegidos por expressa restrição de acesso:
+Pena - reclusão, de 1 (um) a 3 (três) anos, e multa.
+. . .
+PROBLEMA: se não identificado o infrator, responderá o administrador da rede!!!
+
+===== PAGINA 25 =====
+     Por que Política de Segurança?
+
+•  Internet
+    –   Não foi definida inicialmente para ser segura
+    –   RFCs limitam-se à informação e boas práticas
+         •  RFC 2196 Site Security Handbook
+         •  RFC 2504 Users' Security Handbook
+         •  RFC 2828 Internet Security Glossary
+         •  RFC 3013 Recommended ISP Security
+•  Ausência de política = ausência de padronização
+•  Preocupações válidas da organização:
+    –   Invasores podem perturbar os sistemas internos?
+    –   Dados valiosos serão comprometidos?
+    –   A organização se constrangerá de alguma forma?
+    –   Usuários internos podem causar danos a redes e sistemas externos?
+
+===== PAGINA 26 =====
+                  Normas de segurança
+
+•  1989 - Centro de Segurança de Computação Comercial (Reino Unido) cria
+   o “Código de práticas para usuários”
+•  1995 - PD0003 “Código de práticas para gerenciamento de segurança da
+   informação”
+•  BS7799-1:1997 - Padrão britânico; código de práticas de gerenciamento
+   com opiniões de outros países (rev. 99)
+•  BS7799-2:1998 - Segunda parte; certificação de segurança
+•  01/12/2000 - BS7799-1 torna-se ISO/IEC 17799:2000
+•  19/09/2001 - projeto 21:204.01-010 “Tecnologia da Informação - Código
+   de Prática para a Gestão da Segurança da Informação” foi aprovado,
+   originando a norma NBR ISO/IEC 17799:2001.
+•  2005 - ISO 17799 foi substituída pela ISO 27002 (versão atual 2013)
+     –  ABNT – Associação Brasileira de Normas Técnicas. ABNT NBR ISO/IEC 27002 –
+        Tecnologia da informação – Técnicas de segurança – Código de prática para a
+        gestão de segurança da informação. ABNT, 2013
+
+===== PAGINA 27 =====
+            ABNT NBR ISO/IEC 27002
+
+•  As 11 seções da ISO/IEC 27002
+    –  Seção 5 – Política de Segurança da Informação
+    –  Seção 6 – Organizando a Segurança da Informação
+    –  Seção 7 – Gestão de Ativos
+    –  Seção 8 – Segurança em Recursos Humanos
+    –  Seção 9 – Segurança Física e do Ambiente
+    –  Seção 10 – Gestão das Operações e Comunicações
+    –  Seção 11 – Controle de Acesso
+    –  Seção 12 – Aquisição, Desenvolvimento e Manutenção de Sistemas de
+       Informação
+    –  Seção 13 – Gestão de Incidentes de Segurança da Informação
+    –  Seção 14 – Gestão da Continuidade do Negócio
+    –  Seção 15 – Conformidade
+
+===== PAGINA 28 =====
+                  Técnicas de proteção
+
+•  Encriptação (criptografia)
+    –   Para confidência: mensagens cifradas, indecifráveis por terceiros
+    –   Para integridade: assinaturas digitais para conferência
+•  Autenticação
+    –   Usada para checar a identidade de um usuário ou sistema
+    –   Normalmente apoiada por conferência de senhas
+•  Autorização
+    –   Estabelece as regras de acesso (permissões) ao sistema
+    –   Diferentes tipos de usuários podem ter perfis distintos de acesso
+
+===== PAGINA 29 =====
+                     Avaliação e análise
+
+•  Auditoria
+     –  Avaliação dos efeitos das técnicas de proteção adotadas para um sistema
+     –  Geralmente, são verificados registros históricos (arquivos de log), que
+        descrevem as atividades do sistema (quem/como/quando o acessou, e o
+        que fez)
+•  Forense
+     –  Análise dos danos e das consequências de um ataque ao sistema
+        (invasão, vírus, ou utilização inadequada)
+     –  Geralmente, as unidades de armazenamento são analisadas por
+        ferramentas externas, e não pelo próprio sistema da máquina
+     –  Objetiva a recuperação de dados e a responsabilização legal de
+        envolvidos
+
+===== PAGINA 30 =====
+                             Criptografia
+
+•  É a arte e a ciência de esconder o objeto de uma comunicação
+   de uma audiência não pretendida
+•  A ideia básica
+     –  Um transmissor S deseja transmitir uma mensagem P (plaintext –
+        texto plano) para um receptor R
+     –  O transmissor primeiro a encripta (cifra) para um formato indecifrável,
+        obtendo uma mensagem C  (cyphertext)
+     –  A mensagem é transmitida para o receptor, que pode então decifrá-la,
+        obtendo a mensagem original P
+          C = EKe(P)      e      P = DKd(C)
+          EK: função de cifragem, através de uma chave Ke
+          DK: função de decifragem, através de uma chave Kd
+
+===== PAGINA 31 =====
+Chaves de encriptação e algoritmos
+
+•  Pode-se afirmar que a qualidade de um mecanismo
+   criptográfico depende muito da chave utilizada
+    –  A maioria dos algoritmos criptográficos são conhecidos e têm código
+       aberto
+•  Classificação de algoritmos pela chave
+    –  Chave simétrica
+    –  Chave assimétrica (ou pública)
+•  Classificação dos algoritmos quanto à decifragem
+    –  Permitem a recuperação da mensagem original
+    –  Não permitem: são ditos “de caminho único” (one-way functions), ou
+       digestores de mensagens
+
+===== PAGINA 32 =====
+      Algoritmos de chave simétrica
+
+•  Uma mesma chave K é utilizada para cifrar e decifrar
+
+
+   P = DK(EK(P))
+
+
+
+
+
+    –  Algoritmos conhecidos
+         •  Data Encryption Standard (DES)
+         •  Triple Data Encryption Standard (3DES)
+         •  Advanced Encryption Standard (AES)
+         •  International Data Encryption Algorithm (IDEA)
+
+===== PAGINA 33 =====
+    Algoritmos de chave assimétrica
+
+•  Par de chaves compatíveis
+    –   São geradas juntas, pela entidade/aplicação
+    –   Depois disso, mesmo de posse de uma das chaves, não se pode
+        obter/inferir a outra
+    –   Não existe outra chave que combine no lugar da original
+    –   Toda mensagem cifrada através da chave de encriptar (e) só pode ser
+        decifrada com a chave de decifrar (d) do par
+                             P = DKd(EKe(P))
+                 Kd: chave de decifrar                   Ke: chave de encriptar
+    –   Algoritmos conhecidos
+         •  RSA
+         •  Diffie-Hellman
+         •  Elgamal
+
+===== PAGINA 34 =====
+             Chaves pública e privada
+
+•  Chave privada
+    –  Mantida em segredo pelo criador do par
+•  Chave pública
+    –  Distribuída publicamente, junto com certificado digital
+
+•  Certificado digital
+    –  Visa garantir que apenas o criador do par (que forneceu a chave
+       pública) possui seu par, privado
+    –  Pode (deve) ser autenticado por autoridades certificadoras (como a
+       Certisign)
+
+===== PAGINA 35 =====
+     Criptografia com chave pública
+
+•  Para permitir confidência
+    –  Chave pública é a de encriptar (criptografar)    Ke+
+    –  A chave de decifrar é mantida privada      Kd-
+
+===== PAGINA 36 =====
+          Comparação de algoritmos
+
+•  Chave simétrica
+    –  Vantagem: simples e de baixo custo computacional
+    –  Desvantagens: como enviar a chave única?
+
+
+•  Chave assimétrica
+    –  Vantagem: chaves públicas podem ser distribuídas livremente
+    –  Desvantagens: altamente custoso para processamento; para
+       comunicar um canal seguro bilateral, seria necessário criar um par de
+       cada lado
+
+===== PAGINA 37 =====
+        Uso conjunto dos algoritmos
+
+•  Troca de chave simétrica, usando chave pública
+    –  Uma forma de obter vantagens das duas abordagens
+•  Processo
+    –  O cliente, recebe e autentica a chave pública
+    –  Em seguida, cria uma chave simétrica aleatória (de sessão)
+    –  Criptografa a chave simétrica, usando a chave pública
+    –  Então, envia a chave criptografada ao destino (servidor)
+
+•  Implementado pelo SSL (Secure Socket Layer)
+    –  Utilizado por protocolos de aplicação, como HTTPS e SSH
+
+===== PAGINA 38 =====
+Algoritmos de hashing criptográfico
+
+•  Conhecidos como digestores
+    –  “Digerem” a mensagem e geram um índice hash com ela
+•  São algoritmos de caminho único
+    –  É computacionalmente impossível recuperar a mensagem
+•  Funcionamento
+    –  Dada uma mensagem m, de qualquer tamanho, obtém-se o código h,
+       de tamanho fixo para qualquer tamanho de m, através de uma função H
+                        h = H(m)
+•  Algoritmos conhecidos
+    –  MD5 (128 bits)
+    –  SHA (160 bits)
+
+===== PAGINA 39 =====
+                   Assinaturas digitais
+
+•  Assinatura digital é um conteúdo cifrado, transmitido junto
+   com a mensagem para sua conferência
+•  Para permitir a autenticidade (integridade)
+    –  Chave pública é a de decifrar     Kd+
+    –  A chave de encriptar (criptografar) é mantida privada     Ke-
+•  Só a chave pública parceira pode decifrar o conteúdo
+                            P = DKd(EKe(P))
+                 Kd: chave de decifrar pública
+                 Ke: chave de encriptar privada
+•  Uso combinado com hashing criptográfico
+    –  Para reduzir o tamanho da assinatura
+
+===== PAGINA 40 =====
+                               Firewall
+
+•  Equipamento (ou sistema) que permite o controle de
+   segurança na comunicação entre duas ou mais redes
+•  Geralmente atua como um filtro, permitindo pacotes
+   passarem, ou não, de acordo com regras
+•  Abordagens clássicas de configuração
+    –  O que não é expressamente proibido é permitido
+    –  O que não é expressamente permitido é proibido
+•   Algumas implementações de firewalls
+    –   Windows: ZoneAlarm, Norton Internet Security
+    –   Linux: iptables, IPFilter
+
+===== PAGINA 41 =====
+ Sistema Detector de Intrusão (IDS)
+
+•  Reconhece atividades suspeitas e não previstas
+•  Permite configurar ações reativas automáticas
+    –  Reconfigurar firewall
+    –  Enviar alerta
+    –  Gravar Log do ataque
+    –  Terminar conexão
+•  Exemplo de IDS gratuito
+    –  Snort (Freeware) - www.snort.org
+
+===== PAGINA 42 =====
+                                  Iptables
+
+•  Formato geral
+iptables [-t table] [commands] [parameters]
+•  Comandos básicos do iptables:
+    -A        Permite atualizar regras já existentes na estrutura do firewall e
+    acrescenta uma regra às existências no sistema
+    -I        Insere nova regra dentro das existentes do firewall
+    -D        Exclui uma regra específica no firewall
+    -P        Define regra padrão do firewall
+    -L        Lista todas as regras existentes no firewall (de todas as tabelas)
+    -F        Zera (flush) todas as regras do firewall
+
+===== PAGINA 43 =====
+                                 Iptables
+
+•  Formato geral
+iptables [-t table] [commands] [parameters]
+•  Parâmetros básicos do iptables:
+    -p (tcp|udp|icmp|all) a qual protocolo do payload se aplica
+    -s (endereço/máscara) endereço de host, rede ou subrede de origem
+    --sport (porta) porta de origem
+    -d  (endereço/máscara) endereço de host, rede ou subrede de destino
+    --dport (porta) porta de destino
+    -i  (interface) interface de rede (entrada/saída de pacotes)
+    -j (ação: ACCEPT|REJECT|DROP|LOG) ação padrão para a regra
+    -f   trata datagramas fragmentados
+    -t   (filter|nat|mangle) tipo de tabela para a regra
+
+===== PAGINA 44 =====
+                                  Iptables
+
+•  Formato geral
+iptables [-t table] [commands] [parameters]
+•  Tabelas:
+     filter
+          • Permite associar filtros e é a tabela padrão (se omitida a opção –t), cujas
+            regras são classificadas em três canais: INPUT, OUTPUT e FORWARD
+     nat
+          • Permite operar a tradução de endereços e as regras são classificadas em
+            três canais: PREROUTING, POSTROUTING, OUTPUT
+     mangle
+          • Permite operar QoS através da marcação de pacotes
+
+===== PAGINA 45 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 8.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 31.

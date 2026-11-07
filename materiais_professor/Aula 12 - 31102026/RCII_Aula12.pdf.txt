@@ -1,0 +1,223 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+     Aula 12
+     Redes Privadas Virtuais
+     VPN (Virtual Private Networks)
+     Prof. José Martins Junior
+
+===== PAGINA 2 =====
+                   Rede Privada Virtual
+
+•  Forma de comunicação privada, através de canais públicos
+     –  Criadas através da Internet ou outras redes públicas ou privadas para
+        transferência de informações, de modo seguro, entre redes corporativas
+        ou usuários remotos
+     –  Criptografia é usada para garantir a confidência e a integridade
+     –  Pode interligar duas ou mais redes privadas, via Internet ou através de
+        um link públicos, através de um túnel
+•  Tunelamento
+     –  Pacotes de dados são transmitidos na rede pública (Internet, p.e) em um
+        túnel privado que simula uma conexão ponto-a-ponto
+•  Protocolo de tunelamento
+     –  Encapsula o protocolo a ser transportado
+     –  Seu cabeçalho fornece o destino (a outra extremidade do túnel)
+
+===== PAGINA 3 =====
+                           Tipos de VPN
+
+•  Virtual Leased Line Network (VLL)
+     –  Permite a conexão de dois usuários por um túnel IP que emula um
+        circuito físico dedicado ou uma linha privada
+     –  O backbone IP é usado como “entidade de enlace”, transporte fim a
+        fim, de forma transparente para os roteadores
+     –  Através de um servidor pode-se abrir vários túneis VLL
+
+•  Virtual Private Routed Network (VPRN)
+     –  Emulação de uma WAN com vários nós, usando IP
+     –  Rede de topologia não organizada (rede mesh) entre os roteadores do
+        provedor de serviço
+     –  O VPRN permite também controle de tráfego nos nós da rede,
+        evitando congestionamento
+
+===== PAGINA 4 =====
+                           Tipos de VPN
+
+•  Virtual Private Dial Network (VPDN)
+    –  Permite acesso remoto aos usuários via PPP
+    –  A autenticação é feita via servidor RADIUS, por exemplo
+    –  Permite o uso do IPSec ou L2TP
+
+•  Virtual Private Lan Segment (VPLS)
+    –  Emula um segmento de rede local usando o backbone IP
+    –  Oferece o serviço de LAN transparente
+    –  Completa transparência aos protocolos com tunelamento
+       multiprotocolo, e suporte a Broadcast e Multicast
+
+===== PAGINA 5 =====
+  GRE - Generic Routing Encapsulation
+
+•   Ponto-a-ponto
+      –  Configurado entre roteadores (origem e destino)
+      –  Pacotes a serem enviados pelo túnel são encapsulados com o
+         cabeçalho GRE
+
+
+
+
+                                                    Rede IPRede IP
+
+                   Roteador-fonteRoteador-fonteTúnelTúnel               Roteador-destinoRoteador-destino
+ PacotesPacotes
+
+
+
+
+
+
+
+            Inclusão do cabeçalho GRE                            Retirada do cabeçalho GRE
+            Endereço dos pacotes = endereço do fim do            Endereço dos pacotes = endereço
+            túnel                                                 original
+
+===== PAGINA 6 =====
+    L2TP - Layer 2 Tunneling Protocol (IETF)
+
+•  Túneis estáticos iniciados pelo servidor de acesso
+     –  Controle nas mãos do provedor de acesso (NSP)
+     –  Pacotes IP, IPX e NetBEUI são criptografados e enviados através de
+        canais de comunicação de datagrama ponto a ponto tais como IP, X25,
+        Frame Relay ou ATM
+
+
+                             Protocolo de acesso PPP
+
+
+
+             protocolo V.x                       L2TP
+
+  Usuário                  Servidor de Acesso                 de Acesso L2TPServidor
+
+
+
+
+
+                                    Provedor de Acesso                 Internet ou VPN
+
+===== PAGINA 7 =====
+   PPTP - Point-to-point Tunneling Protocol
+                                  (Microsoft)
+
+•  Túneis iniciados pelo usuário, on demand
+     –  Controle nas mãos do usuário
+     –  Pacotes IP, IPX e NetBEUI são criptografados, encapsulados e enviados
+        através de redes IP privadas ou públicas
+
+
+
+
+
+
+         Interface Virtual PPTP  Protocolo de acesso PPP
+
+
+
+               Acesso IP discado
+
+
+             Interface Serial   Servidor de Acesso                   Servidor
+  Usuário                                                        de Acesso PPTP
+
+===== PAGINA 8 =====
+        Caso 1: Acesso remoto via Internet
+
+•  Criação da VPN através de um provedor de acesso
+    –  A estação conecta-se à Internet via provedor e o software de VPN cria
+       um túnel entre o usuário remoto e o servidor de VPN corporativo
+
+===== PAGINA 9 =====
+     Caso 2: Conexão de LANs via Internet
+
+•  Solução que substitui as conexões entre LANs através de
+   circuitos dedicados de longa distância
+    –  Utiliza circuitos dedicados locais, interligando-as à Internet
+    –  O software de VPN assegura esta interconexão formando a WAN
+       corporativa
+
+===== PAGINA 10 =====
+  Caso 3: Conexão dentro de uma Intranet
+
+•  Túneis em uma rede interna
+    –  Em algumas organizações, existem dados confidenciais cujo acesso é
+       restrito a um pequeno grupo de usuários
+    –  Nestas situações, redes locais departamentais são implementadas
+       fisicamente separadas da LAN corporativa
+
+===== PAGINA 11 =====
+   Tunelamento em nível 2 – enlace
+
+•  Simula enlaces locais sobre uma rede esparsa (PPP sobre IP)
+    –  Protocolos de camada 3 (IP, IPX, p.e) são encapsulados em quadros
+       PPP (Point-to-Point Protocol)
+    –  O canal ponto a ponto é encapsulado pelo IP, que conectará os pontos
+       finais (redes ou estações)
+•  Tipos
+    –  PPTP (Point-to-Point Tunneling Protocol) da Microsoft
+    –  L2TP (Layer 2 Tunneling Protocol) da IETF
+    –  L2F (Layer 2 Forwarding) da Cisco - para VPNs discadas
+
+===== PAGINA 12 =====
+     Tunelamento em nível 3 – rede
+
+•  A ideia é construir túneis de redes IP, encapsulados pelo
+   próprio IP (IP sobre IP)
+•  IP Security Tunnel Mode (IPSec) da IETF
+    –  Pacotes IP são criptografados e encapsulados com cabeçalhos
+       adicionais IP e transportados numa rede IP pública ou privada
+    –  Permite gerenciamento de chaves e suporta múltiplos protocolos de
+       criptografia
+    –  Foi desenvolvido para IPv6, mas sofreu adaptações para possibilitar a
+       sua utilização com o IPv4
+
+===== PAGINA 13 =====
+                     Túnel Voluntário
+
+•  VPN entre duas máquinas
+    –  O computador do usuário funciona como uma das extremidades do
+       túnel e, também, como cliente do túnel
+    –  O túnel pode estar disponível ou ser criado sob demanda
+    –  Os pontos finais sabem da existência do túnel
+
+===== PAGINA 14 =====
+                    Túnel Compulsório
+
+•  VPN entre duas redes
+    –  O computador do usuário não funciona como extremidade do túnel,
+       portanto desconhece sua existência
+    –  Ao comunicar-se com um destino, o roteador da rede (de um provedor,
+       p.e) identifica que tal destino é via VPN
+    –  Então encaminha pelo túnel, de forma transparente
+
+===== PAGINA 15 =====
+            SSL (Secure Socket Layer)
+
+•  Camada segura de transporte
+    –   Utilizada por protocolos de aplicação, como o HTTPS  e o SSH
+    –   Permite autenticação e criptografia de chaves pública e simétrica
+    –   Não é um protocolo de VPN, mas pode comunicar duas aplicações
+•  Tunelamento voluntário com SSH
+    –   Permite a criação de túneis criptografados (SSL) entre duas aplicações
+    –   Geralmente utilizado para encapsular protocolos de aplicação
+    –   Mas pode carregar uma pilha toda de protocolos
+    –   Ex.: SSH + PPP
+         •  Problema: overhead extra na comunicação
+
+===== PAGINA 16 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 8.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 32.

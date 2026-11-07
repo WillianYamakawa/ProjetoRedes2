@@ -1,0 +1,57 @@
+===== PAGINA 1 =====
+                                 Escola de Engenharia de Piracicaba
+                    Redes de Computadores II – Prof. José Martins Junior
+                                            Aula 1 – Exercícios
+
+1.  Por ser orientado à conexão, que vantagem o TCP oferece, em relação ao UDP?
+
+2.  Uma das principais funções da camada de transportes da Internet é a identificação não ambígua de
+    aplicações (end points) em um host. Como essa identificação é feita? Qual é o tamanho do campo
+    destinado a isso nos protocolos TCP e UDP?
+
+3.  Uma empresa está desenvolvendo duas aplicações:
+        a.  Um sistema bancário online;
+        b.  Um sistema de transmissão de vídeo ao vivo.
+    Indique qual protocolo de transporte (TCP ou UDP) seria mais adequado para cada aplicação e
+    justifique tecnicamente sua escolha.
+
+4.  Um navegador acessa uma página Web que contém imagens armazenadas em outro servidor.
+    Explique como ocorre a interação cliente-servidor nesse cenário e por que um único cliente pode
+    estabelecer comunicação com múltiplos servidores.
+
+5.  Explique o conceito de “multiplexação na camada de transporte”. Utilize como exemplo um
+    computador executando simultaneamente um navegador Web, um cliente de e-mail e um aplicativo
+    de videoconferência.
+
+6.  Dois servidores diferentes executam no mesmo computador:
+        a.  Um servidor HTTP;
+        b.  Um servidor MySQL.
+    Explique como o sistema operacional consegue direcionar corretamente as mensagens recebidas
+    para cada aplicação.
+
+7.  Explique por que apenas o número da porta “não é suficiente” para identificar unicamente uma
+    comunicação na Internet. Mostre quais informações compõem a identificação completa de uma
+    conexão TCP.
+
+8.  Um administrador decide configurar um servidor HTTP para utilizar a porta 8080 em vez da porta 80.
+    Explique as consequências dessa decisão para os clientes que desejarem acessar o serviço.
+
+9.  O UDP não realiza confirmação de entrega nem retransmissão de pacotes. Explique por que, mesmo
+    com essas limitações, esse protocolo continua sendo amplamente utilizado em diversas
+    aplicações.
+
+10. Durante a análise de uma captura de pacotes, foram observadas mensagens contendo as flags:
+        a.  SYN;
+        b.  ACK;
+        c.  FIN;
+        d.  RST.
+    Explique a finalidade de cada uma delas e em quais situações normalmente aparecem.
+
+11. Uma empresa deseja desenvolver um sistema para monitoramento remoto de equipamentos
+    industriais. O sistema possui duas funcionalidades:
+        a.  Transmissão contínua de vídeo das câmeras;
+        b.  Envio de comandos de controle para os equipamentos.
+
+===== PAGINA 2 =====
+Escolha o protocolo de transporte mais adequado para cada funcionalidade e justifique sua resposta
+considerando confiabilidade, atraso, overhead e requisitos da aplicação.

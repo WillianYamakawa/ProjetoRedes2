@@ -1,0 +1,83 @@
+Redes de Computadores II – Prof. José Martins Junior
+Prática - instalação, configuração e uso de servidores CUPS e Samba
+
+1. Procedimentos preliminares (Debian): configure a interface de rede.
+
+2. Instalação, configuração e teste do Samba:
+apt-get update
+apt-get install samba smbclient cifs-utils
+
+O processo de instalação definirá o nome do grupo (Workgroup) como WORKGROUP.
+
+Na sequência, podem-se adicionar usuários ao sistema. O processo de criação é o mesmo de usuários no SO Linux. Os comandos abaixo servirão para criar dois usuários (joao e maria) no sistema, sem direito a login (shell).
+adduser --disabled-login --no-create-home joao
+adduser --disabled-login --no-create-home maria
+
+Para que acessem o Samba, é necessária a definição das senhas para tais usuários:
+smbpasswd -a joao
+smbpasswd -a maria
+
+As senhas são armazenadas no arquivo /var/lib/samba/private/passdb.tdb e os dados de cadastro podem ser obtidos pelos comandos:
+pdbedit -L
+pdbedit -Lv
+
+Para se criar um diretório compartilhado e fornecer acesso de escrita e leitura para os dois usuários recém configurados, devem-se:
+Criar o diretório (no exemplo, um diretório arquivos em /home) e fornecer todas as permissões:
+mkdir /home/arquivos
+chmod 777 /home/arquivos
+
+Adicionar a configuração do compartilhamento no arquivo /etc/samba/smb.conf:
+[arquivos]
+   path = /home/arquivos
+   available = yes
+   writable = yes
+   write list = maria, joao
+   #hosts allow = 192.168.0.2, 192.168.0.1
+
+Para a configuração acima, o nome do compartilhamento será "arquivos". Os usuários maria e joao poderão realizar operações de escrita e leitura no diretório, desde que se conectem a partir dos hosts: 192.168.0.2 ou 192.168.0.1. Porém, se forem feitas as seguintes modificações, apenas o usuário joao poderá realizar escrita, alteração e remoção de arquivos:
+[arquivos]
+   path = /home/arquivos
+   available = yes
+   writable = no
+   write list = joao
+   #hosts allow = 192.168.0.2, 192.168.0.1
+
+Para reiniciar o serviço:
+service samba-ad-dc stop
+service smbd stop
+service smbd start
+service samba-ad-dc start
+
+Testes a partir de clientes Linux:
+
+O aplicativo smbclient permite realizar várias interações com o servidor Samba, como:
+Listar todos os compartilhamentos:
+smbclient -L localhost -U joao
+Conectar cliente (parecido com FTP) para operação remota com o compartilhamento:
+smbclient //WORKGROUP/arquivos -U joao -I localhost
+
+Realizar montagem do compartilhamento em um ponto do FS local (o diretório localdir deve ser criado; o comando só funcionará com root, ao menos que o ponto de montagem esteja especificado em /etc/fstab):
+mount -t cifs //localhost/arquivos localdir -o domain=WORKGROUP,username=joao
+Para desmontar:
+umount localdir
+
+Teste a partir de um cliente Windows, com algo do tipo:
+\\DEBIAN\
+Ou de um gerenciador de arquivos do Linux, com algo do tipo (ou IP_SERVIDOR no lugar de localhost):
+smb://localhost/
+Ao acessar o compartilhamento remoto, será solicitado o login de um usuário (que no caso, deverá ser joao ou maria).
+
+
+3. Instalação e teste do CUPS:
+
+Os pacotes sugeridos para instalação (e suas dependências):
+apt-get install cups cups-core-drivers printer-driver-cups-pdf
+
+Para reiniciar o serviço:
+service cups stop
+service cups start
+
+Para configurar, instalar impressoras, e gerenciar filas de impressão, acesse a interface Web, com um browser:
+http://localhost:631/
+
+Quando acessar Administration, o login solicitado é para o usuário root do sistema.

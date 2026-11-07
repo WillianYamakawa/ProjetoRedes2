@@ -1,0 +1,49 @@
+===== PAGINA 1 =====
+                                 Escola de Engenharia de Piracicaba
+                     Redes de Computadores II – Prof. José Martins Junior
+                                             Aula 2– Exercícios
+
+1.  Explique como ocorre o processo de estabelecimento de uma conexão pelo protocolo TCP.
+
+2.  O que significa o tamanho de janela informado pelo destinatário de uma conexão TCP? Que tipo de
+    controle ela exerce na comunicação de dados, via TCP?
+
+3.  Um cliente tenta estabelecer uma conexão TCP com um servidor Web. No entanto, o servidor não
+    possui nenhuma aplicação escutando na porta solicitada. Explique como ocorre a tentativa de
+    conexão e qual resposta o cliente receberá. Em sua resposta, descreva o papel das flags SYN, ACK
+    e RST durante esse processo.
+
+4.  Considere que um segmento TCP foi enviado corretamente, porém o ACK correspondente foi perdido
+    durante a transmissão. Explique como o TCP identifica esse problema e quais mecanismos garantem
+    que os dados não sejam perdidos nem duplicados.
+
+5.  Explique a função dos seguintes campos do cabeçalho TCP:
+        a.  Sequence Number;
+        b.  Acknowledgement Number;
+        c.  Window Size.
+    Mostre como esses campos trabalham em conjunto para garantir uma transmissão confiável.
+
+6.  Um computador possui conexão de alta velocidade, enquanto o destinatário possui capacidade
+    limitada de processamento. Explique como o TCP evita que o transmissor envie dados em
+    quantidade superior àquela que o receptor consegue processar.
+
+7.  Duas conexões TCP apresentam características diferentes:
+        a.  Conexão A: computadores na mesma rede local (LAN);
+        b.  Conexão B: computadores localizados em continentes diferentes.
+    Explique como os valores de RTT e RTO tendem a se comportar em cada caso e por que o TCP não
+    utiliza um único valor fixo de timeout para todas as conexões.
+
+8.  Uma aplicação consumidora lê apenas alguns poucos bytes do buffer de recepção por vez. Explique
+    como essa situação pode levar à Síndrome da Janela Boba (Silly Window Syndrome) e descreva
+    duas estratégias utilizadas para reduzir esse problema.
+
+9.  Embora ambos utilizem o conceito de janela, o controle de fluxo e o controle de congestionamento
+    possuem objetivos distintos. Compare esses dois mecanismos, explicando quais problemas cada um
+    procura resolver e quais informações são utilizadas pelo TCP para tomar suas decisões.
+
+10. Uma empresa possui um servidor que atende simultaneamente centenas de clientes distribuídos
+    pela Internet. Em determinados horários, o desempenho cai significativamente devido ao aumento
+    do tráfego na rede. Explique como os mecanismos de controle de congestionamento do TCP
+    contribuem para manter a estabilidade da rede. Em sua resposta, discuta também o papel do
+    algoritmo RED (Random Early Detection/Discard/Drop) na prevenção do congestionamento.
+    Comente também como alguns programas fazem para tentar confrontar tais ações.

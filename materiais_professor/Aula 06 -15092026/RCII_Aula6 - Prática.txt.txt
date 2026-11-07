@@ -1,0 +1,147 @@
+Redes de Computadores II – Prof. José Martins Junior
+Prática – instalação, configuração e uso de servidores SMTP e POP3 
+
+1. Procedimentos preliminares (Debian): configure a interface de rede
+
+2. Instalação e teste do SMTP server
+
+Instalação do SMTP server (no Debian):
+apt-get install exim4
+
+Para configurar a autorização para acesso aos clientes da rede local:
+nano /etc/exim4/update-exim4.conf.conf
+Altere as linhas (exemplos):
+dc_eximconfig_configtype='internet'
+dc_local_interfaces=''
+dc_relay_domains='exemplo.com.br'
+dc_relay_nets='127.0.0.1 : 192.168.0.0/24'
+
+Atualize as configurações:
+update-exim4.conf
+
+Reinicie o serviço:
+service exim4 stop
+service exim4 start
+
+Exemplo de interação entre um cliente telnet com um servidor SMTP :
+Primeiro, inicie um segundo host e configure como na prática anterior.
+E, em um terminal de usuário comum (troque o IP_SERVIDOR):
+
+user@debian:~$ telnet IP_SERVIDOR 25
+Trying 192.168.200.1...
+Connected to 192.168.200.1.
+Escape character is '^]'.
+220 debian.meu.so ESMTP Exim 4.98.2 Fri, 24 Jul 2026 17:57:14 -0300
+
+HELO exemplo.com.br
+250 debian.meu.so Hello host2.exemplo.com.br [192.168.200.2]
+
+MAIL FROM: <martins@exemplo.com.br>
+250 OK
+
+RCPT TO: <user@exemplo.com.br>
+250 Accepted
+
+DATA
+354 Enter message, ending with "." on a line by itself
+
+From: martins@exemplo.com.br
+To: user@exemplo.com.br
+Subject: Teste 
+Este é um teste de mensagem.
+.
+
+250 OK id=1wnMxV-000000002Hu-3Dm3
+
+QUIT
+221 debian.meu.so closing connection
+Connection closed by foreign host.
+
+
+Para verificar a mensagem recebida no INBOX (em um terminal do usuário no servidor):
+debian:~# cat /var/mail/user
+
+
+3. Instalação e teste de um POP3 server:
+
+Instalação do POP3 server (no mesmo servidor do SMTP):
+apt-get install dovecot-pop3d
+
+nano /etc/dovecot/conf.d/10-auth.conf
+Habilite temporariamente a interação sem criptografia, localizando e descomentando a linha:
+auth_allow_cleartext = yes
+
+Reinicie o serviço:
+service dovecot stop
+service dovecot start
+
+
+Interação de clientes com o POP3, via telnet, a partir do segundo host inicializado (troque o IP_SERVIDOR):
+
+user@debian:~$ telnet IP_SERVIDOR 110
+Trying 192.168.200.1...
+Connected to 192.168.200.1.
+Escape character is '^]'.
++OK Dovecot ready.
+
+USER user
++OK
+
+PASS user
++OK Logged in.
+
+LIST
++OK 1 messages:
+1 778
+.
+
+RETR 1
++OK 778 octets
+Return-path: <>
+Envelope-to: postmaster@debian.meu.so
+Delivery-date: Fri, 24 Jul 2026 17:57:36 -0300
+Received: from Debian-exim by debian.meu.so with local (Exim 4.98.2)
+	id 1wnMxc-000000002Hx-1nyB
+	for postmaster@debian.meu.so;
+	Fri, 24 Jul 2026 17:57:36 -0300
+Auto-Submitted: auto-replied
+From: Mail Delivery System <Mailer-Daemon@debian.meu.so>
+To: postmaster@debian.meu.so
+References: <E1wnMxV-000000002Hu-3Dm3@debian.meu.so>
+Subject: Message frozen
+Message-Id: <E1wnMxc-000000002Hx-1nyB@debian.meu.so>
+Date: Fri, 24 Jul 2026 17:57:36 -0300
+
+Message 1wnMxV-000000002Hu-3Dm3 has been frozen.
+The sender is <martins@exemplo.com.br>.
+
+The following address(es) have yet to be delivered:
+  user@exemplo.com.br: lowest numbered MX record points to local host
+.
+
+LIST
++OK 1 messages:
+1 778
+.
+
+DELE 1
++OK Marked to be deleted.
+
+LIST
++OK 0 messages:
+.
+
+QUIT
++OK Logging out, messages deleted.
+Connection closed by foreign host.
+
+
+No servidor, novamente (terminal com root):
+nano /etc/dovecot/conf.d/10-auth.conf
+Desabilite a interação sem criptografia, localizando e comentando a linha:
+#auth_allow_cleartext = yes
+
+Reinicie o serviço:
+service dovecot stop
+service dovecot start
+

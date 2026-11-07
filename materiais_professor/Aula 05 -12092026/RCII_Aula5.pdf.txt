@@ -1,0 +1,228 @@
+===== PAGINA 1 =====
+Redes de Computadores II
+
+
+    Aula 5
+    Correio eletrônico (SMTP), POP/IMAP e
+    MIME
+    Prof. José Martins Junior
+
+===== PAGINA 2 =====
+      O serviço de correio eletrônico
+
+•  O correio eletrônico consiste de um serviço criado para a
+   transferência de mensagens entre usuários da Internet
+     –  Conteúdo exclusivamente texto (ASCII)
+     –  Formato de carta (remetente, destinatário, assunto, ...)
+•  Definido pela RCF 2821 (SMTP: Simple Mail Transfer Protocol)
+     –  O funcionamento básico consiste em enviar mensagens para caixas
+        postais (mail boxes)
+          • Um cliente (user agent) pode acessar as caixas postais locais
+          • Um cliente pode também efetuar encaminhamento das mensagens
+            através do servidor (MTA – Message Transfer Agent)
+          • As mensagens recebidas de outros MTAs são armazenadas nas caixas
+            postais dos usuários
+     –  A identificação de uma caixa postal inclui o nome do usuário (login
+        name) e o nome do host onde se localiza
+          • Formato: login_name@host_name
+
+===== PAGINA 3 =====
+MTA: encaminhamento
+
+                         •   O processo de encaminhamento
+                             de um MTA consiste
+                              –  O MTA de origem extrai o host de
+                                 destino da mensagem e busca no
+                                 serviço DNS a identificação dos
+                                 mail exchangers (registros MX) para
+                                 o endereço em questão
+                              –  A mensagem é então encaminhada
+                                 para os registros MX por ordem de
+                                 preferência (do menor valor para o
+                                 maior)
+                              –  O MTA de extrai a informação do
+                                 usuário e armazena na caixa postal
+                                 apropriada
+
+===== PAGINA 4 =====
+               MTA: encaminhamento
+
+•  Exemplo: encaminhar mensagem para usuario@gmail.com
+     –  Primeiro, obtém os registros MX para o endereço gmail.com
+          gmail.com mail is handled by 40 alt4.gmail-smtp-in.l.google.com.
+          gmail.com mail is handled by 10 alt1.gmail-smtp-in.l.google.com.
+          gmail.com mail is handled by 30 alt3.gmail-smtp-in.l.google.com.
+          gmail.com mail is handled by 5 gmail-smtp-in.l.google.com.
+          gmail.com mail is handled by 20 alt2.gmail-smtp-in.l.google.com.
+     –    Obs.: utilize o seguinte comando no Linux para obter essa lista:
+               host -t MX gmail.com
+     –  Depois, tenta encaminhar ao MTA no host com menor número
+               gmail-smtp-in.l.google.com
+     –  Se não estiver disponível, tentará o próximo (alt1.gmail-smtp-
+        in.l.google.com.), e assim por diante
+
+===== PAGINA 5 =====
+      Formato de mensagens SMTP
+
+•  O formato da mensagem é definido pela RFC 822 (Standard
+   for the Format of Arpa Internet Text Messages) e suporta
+   diversos campos de cabeçalho (além do corpo da mensagem)
+    From:     Nome do remetente
+    To:                Endereço do destinatário
+    Cc:                Endereços para cópias carbono
+    Bcc:      Destinatários não informados (blind copies)
+    Date:     Data de envio
+    Sender:   Endereço do remetente (geralmente igual ao From)
+    Subject: Assunto
+    Reply-To:          Endereço alternativo para resposta
+    X-Charset:         Conjunto de caracteres utilizado (normalmente ASCII)
+    X-Mailer:          Software de correio usado para o envio da mensagem
+    X-Sender:          Duplicata do endereço do remetente
+
+===== PAGINA 6 =====
+            MIME: inclusão de anexos
+
+•  O MIME (Multipurpose Internet Mail Extensions)
+     –  Extensão ao SMTP que permite a inclusão de outros conteúdos
+        (binários, caracteres especiais, etc.) além de texto puro (ASCII)
+     –  Protocolo atualmente definido pelas RFCs de 2045 a 2049
+     –  Tornou-se a base para interpretação de conteúdos convertidos em
+        ASCII por outras aplicações, como o HTTP (como um protocolo de
+        apresentação do modelo OSI)
+     –  Um usuário pode anexar (attach) a uma mensagem partes distintas
+        (arquivo executável, figura, p.e.) e o cliente (user agent) informará o
+        tipo MIME do conteúdo
+          • O conteúdo é codificado como conteúdo ASCII puro e inserido no corpo da
+            mensagem, devidamente delimitado e identificado
+          • O MIME define o padrão de meta-dados que identificará o texto
+            delimitado
+
+===== PAGINA 7 =====
+      Delimitação de conteúdos
+
+–  A delimitação é realizada através de um cabeçalho
+   que estende a RFC 822
+
+
+     Cabeçalho                     Significado
+     MIME-Version:                 Identifica a versão do MIME
+     Content-Description:          String que identifica o conteúdo da mensagem
+
+     Content-Id:                   Identificador exclusivo
+     Content-Transfer-Encoding:    Como o conteúdo foi codificado
+     Content-Type:                 Tipo e formato do conteúdo
+
+===== PAGINA 8 =====
+                              Exemplo de mensagem
+
+
+
+From user@gmail.com  Mon Apr 25 14:29:19 2011                                 … (1) – continuação
+Return-Path: <user@gmail.com>                                                Content-Type: application/vnd.openxmlformats-
+X-Original-To: user@teste.com.br                                             officedocument.wordprocessingml.document;
+Delivered-To: user@teste.com.br                                                              name="teste.docx"
+Received: by mail.teste.com.br (Postfix, from userid 65534)                  Content-Disposition: attachment; filename="teste.docx"
+id EB5EC16E9E8A; Mon, 25 Apr 2011 14:29:19 -0300 (BRT)                       Content-Transfer-Encoding: base64
+  ... (algumas linhas do cabeçalho foram removidas)                          X-Attachment-Id: f_gmxopoc10
+MIME-Version: 1.0
+Date: Mon, 25 Apr 2011 14:32:17 -0300                                        UEsDBBQABgAIAAAAIQDd/
+Message-ID: <BAkTindmUjzOwigXJxrfjkxV6sw@mail.gmail.com>                     JU3ZgEAACAFAAATAAgCW0NvbnRlbnRfVHlwZXNdLnhtbCCiBAIooA
+Subject: Teste                                                               AC
+From: Martins <user@gmail.com>                                               AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                                                                             AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+To: Martins <user@teste.com.br>                                                ... (172 linhas foram apagadas)
+Content-Type: multipart/mixed;                                               AHdvcmQvc3R5bGVzLnhtbFBLBQYAAAAACwALAMECAAANJAAAAA
+boundary=bcaec5314cc1d7fca704a1c196ee                                        A=
+Status: R                                                                    --bcaec5314cc1d7fca704a1c196ee--
+--bcaec5314cc1d7fca704a1c196ee
+Content-Type: text/plain; charset=ISO-8859-1
+teste
+--bcaec5314cc1d7fca704a1c196ee
+  … continua em (1)
+
+===== PAGINA 9 =====
+             Cliente-servidor no SMTP
+•  Clientes SMTP
+     –  Solicitam o envio de mensagens do usuário, através do SMTP server, e
+        operam o acesso a caixas postais
+          •  Localmente, como pine, mutt, elm e webmail
+          •  Remotamente, via POP3 ou IMAP, como Thunderbird, Outlook
+•  Servidores SMTP
+     –  Encaminham mensagens
+          •  Tornam-se clientes do mail server de destino, guardando uma cópia da
+             mensagem até a recepção completa
+          •  Enviam apenas uma cópia da mensagem para cada host de destino
+             (mesmo que ela se destine a vários usuários)
+     –  Recebem de mensagens
+          •  E armazenamento no mail box do usuário (destinatário)
+     –  A porta servidora do SMTP (conectada por clientes para
+        encaminhamento ou por outros servidores), é a 25
+          •  Exemplos de servidores SMTP: sendmail, exim, postfix
+
+===== PAGINA 10 =====
+            Interação com um SMTP
+
+•  O SMTP define um padrão para troca de mensagens
+   entre clientes e servidores
+    –  A interação básica se dá pela conexão do cliente à porta 25
+       de um SMTP server
+    –  Em seguida, o cliente pode iniciar uma conversação com o
+       servidor, utilizando-se de alguns comandos
+         • HELO – pede para o SMTP server contatar o MTA de destino
+         • MAIL FROM: – informa a caixa postal de origem
+         • RCPT TO: – informa a caixa postal de destino
+         • DATA – indica o início da mensagem (cabeçalho + corpo) que
+           deverá ser encerrada com um caractere “.” (ponto final)
+         • QUIT – encerra a conexão com o servidor
+
+===== PAGINA 11 =====
+                                    POP3
+
+•  A caixa postal de um usuário pode ser armazenada em uma
+   máquina diferente de onde é executado o cliente (user agent)
+•  A RFC 1939 especifica o POP3 (Post Office Protocol, v.3)
+    –   Permite a listagem, a transferência (download) e a remoção de
+        mensagens de uma caixa postal remota
+    –   Foi originalmente definido para a solução do problema de acesso a
+        caixas postais remotas, utilizando-se de um serviço dial-up (dado o
+        problema com o custo de se manter o acesso contínuo)
+    –   Implementação bem conhecida do POP3 server: Qpopper
+    –   A porta servidora padrão do POP3 é a 110
+
+===== PAGINA 12 =====
+               Interação com o POP3
+
+•  Após a conexão com o servidor, procede-se a autenticação
+    –  O login e a senha são apresentados pelos comandos USER e PASS,
+       respectivamente
+•  Em seguida, através de séries de comandos, o cliente pode
+   realizar tarefas, como:
+    –  Solicitar a lista de mensagens (LIST)
+    –  Pedir que lhe envie uma determinada mensagem (RETR)
+    –  Solicitar a remoção de uma mensagem da caixa postal (DELE)
+    –  Encerrar o serviço (QUIT)
+
+===== PAGINA 13 =====
+                                     IMAP
+
+•  O IMAP (Internet Message Access Protocol), cuja versão atual
+   (4) é definida pela RFC 3501, oferece outros serviços para
+   acesso às caixas postais
+    –   A porta padrão do serviço IMAP é a 143
+    –   Permite os modos de operação conectado e desconectado
+    –   Aceita conexão de múltiplos clientes simultâneos à mesma caixa postal
+    –   Permite acesso de partes MIME distintas de uma mensagem (remover
+        apenas o anexo, por exemplo)
+    –   Mantém informação de estado da mensagem no servidor
+    –   Consegue gerenciar múltiplas caixas de correio (folders) do usuário em
+        um mesmo servidor
+    –   Oferece busca por mensagens no lado do servidor
+
+===== PAGINA 14 =====
+                         Bibliografia
+
+•  TANENBAUM, A. S.; WETHERALL, D. J. Redes de Computadores.
+   5ª ed. São Paulo: Pearson Prentice Hall, 2011. 600 p. Capítulo 7.
+
+•  FOROUZAN, B. A. Comunicação de dados e redes de
+   computadores. Porto Alegre: AMGH, 2010. 1168 p. Capítulo 26.

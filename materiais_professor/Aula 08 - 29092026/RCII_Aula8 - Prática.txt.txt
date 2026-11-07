@@ -1,0 +1,77 @@
+Redes de Computadores II – Prof. José Martins Junior
+Prática - instalação, configuração e uso de servidores HTTP (Apache) e Proxy (Squid)
+
+1. Procedimentos preliminares (Debian): configure a interface de rede.
+
+2. Instalação e teste do HTTP server
+
+Instalação do HTTP server (no Debian):
+apt-get install apache2
+
+Para reiniciar o serviço:
+service apache2 stop
+service apache2 start
+
+Exemplo de interação entre um cliente telnet com um servidor HTTP (no lugar de localhost pode usar IP_SERVIDOR):
+user@debian:~# telnet localhost 80
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+GET /
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+.....
+  </body>
+</html>
+
+Connection closed by foreign host.
+
+
+Para testar, via browser, apenas acesse a URL (no lugar de localhost pode usar IP_SERVIDOR):: 
+http://localhost  ou  http://localhost:80
+
+
+3. Habilitando o HTTPS
+
+Primeiro, certifique-se que o open-ssl está instalado
+apt-get install openssl
+
+Habilite o módulo ssl no apache2
+a2enmod ssl
+
+Adicione a configuração do virtual host com suporte a SSL:
+a2ensite default-ssl
+
+Edite o arquivo:
+nano /etc/apache2/sites-available/default-ssl.conf
+E insira a linha (pode ser logo no começo, antes da linha "DocumentRoot /var/www/html")
+        ServerName localhost
+
+Adicione a configuração inserida:
+a2ensite default-ssl.conf
+
+Reinicie o serviço:
+systemctl restart apache2
+
+Para testar, via browser, apenas acesse a URL (no lugar de localhost pode usar IP_SERVIDOR): 
+https://localhost  ou  https://localhost:443
+
+Como o certificado não foi assinado por nenhuma entidade válida, receberá uma exceção de segurança, que pode adicionar, para teste, em "Avançado".
+
+
+2. Instalação e teste do Proxy server
+
+Instalação do Proxy server (no Debian):
+apt-get install squid
+
+Para reiniciar o serviço:
+service squid stop
+service squid start
+
+Para testar, basta configurar o proxy localhost:3128 (ou IP_SERVIDOR:3128) no browser
+
+Toda configuração do Proxy (portas, regras de acesso, autenticação, p.e) devem ser realizadas no arquivo squid.conf (e reiniciado o servidor depois)
+
+nano /etc/squid/squid.conf
