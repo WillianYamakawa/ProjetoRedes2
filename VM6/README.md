@@ -10,25 +10,13 @@
    apt-get install squid apache2-utils
    ```
 
-   Se o arquivo de senhas ainda não existir, crie-o ao cadastrar proxy1. Digite a senha quando solicitado.
+   Cadastre um usuário de teste e digite a senha quando solicitado. Se o arquivo de senhas já existir, execute `htpasswd -B /etc/squid/squid.pass proxy1` para atualizar a conta e aplique as duas permissões do bloco abaixo.
 
    ```sh
    (
        umask 027
        htpasswd -cB /etc/squid/squid.pass proxy1
    )
-   ```
-
-   Se o arquivo já existir, use o comando abaixo para cadastrar ou atualizar proxy1 e preservar as demais contas.
-
-   ```sh
-   htpasswd -B /etc/squid/squid.pass proxy1
-   ```
-
-   Cadastre proxy2 e ajuste as permissões do arquivo. Para cadastrar outra conta ou trocar uma senha, use o comando htpasswd abaixo com o nome correspondente.
-
-   ```sh
-   htpasswd -B /etc/squid/squid.pass proxy2
    chown root:proxy /etc/squid/squid.pass
    chmod 640 /etc/squid/squid.pass
    ```
@@ -59,7 +47,7 @@
    http_access deny all
    ```
 
-4. Valide com `squid -k parse`. Se a configuração estiver válida, aplique-a com `service squid stop` e depois `service squid start`.
+4. Valide com `squid -k parse`. Se a configuração estiver válida e o Squid já estiver rodando, aplique-a com `squid -k reconfigure`. Se o serviço estiver parado, inicie-o com `service squid start`.
 
 ## Testar
 

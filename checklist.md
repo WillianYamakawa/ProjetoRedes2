@@ -26,11 +26,13 @@ Usar os comandos de materiais_professor. Manter a rede em rede.sh e documentar o
 - [ ] **VM1 — Testar HTB.** Medir as classes sob tráfego simultâneo e verificar que, na entrada, os demais fluxos não usam a sobra de Web ou FTP e, na saída, os demais fluxos não usam a sobra de Web.
 - [ ] **VM2 — DHCP.** Configurar o serviço indicado no diagrama e testar em um cliente a concessão de IP, máscara, gateway e DNS.
 - [ ] **VM3 — HTTP, HTTPS e PHP.** Seguir o README na appliance e testar HTTP, HTTPS com certificado e execução de PHP.
+- [x] **VM3 — Testes no Debian Docker.** Validar HTTP, HTTPS com certificado de laboratório e execução de PHP a partir de um cliente da intranet.
 - [ ] **VM3 — Webmail.** Implementar e testar envio e leitura em integração com a VM4.
 - [ ] **VM4 — DNS.** Configurar as zonas direta e reversa de `trabalho202624.com.br` e habilitar o cache. Testar resolução direta e reversa na intranet e resolução externa pelo cache. Documentar o procedimento de registro no Registro.br.
 - [ ] **VM4 — SMTP e IMAP.** Configurar o envio pela intranet, quatro caixas postais e um cliente de e-mail. Testar envio, entrega e leitura por IMAP.
-- [ ] **VM5 — Samba.** Configurar o grupo `TRAB202624` e o compartilhamento `arquivos24`, com quatro usuários. Testar leitura e escrita para dois usuários e somente leitura para os outros dois.
-- [ ] **VM5 — CUPS.** Configurar uma impressora PDF e testar a impressão a partir de um cliente.
+- [ ] **VM5 — Samba na appliance.** Configurar o grupo `TRAB202624` e o compartilhamento `arquivos24`, com quatro usuários. Testar leitura e escrita para dois usuários e somente leitura para os outros dois.
+- [ ] **VM5 — CUPS na appliance.** Configurar uma impressora PDF no CUPS e confirmar a geração do arquivo na VM5.
+- [x] **VM5 — Testes no Debian Docker.** Validar os dois editores, os dois leitores e a recusa de senha incorreta no Samba. Enviar um trabalho IPP da sub-rede A e conferir o conteúdo do PDF gerado e o bloqueio da administração remota do CUPS.
 - [x] **VM6 — Proxy.** Documentar em VM6/README.md a instalação do Squid, o cadastro de usuários e a edição do squid.conf.
 - [x] **VM6 — Testes no Debian Docker.** Validar login, acesso HTTP e HTTPS permitido, bloqueio dos domínios e subdomínios pedidos, filtro do termo “sexo” em HTTP e bloqueio entre 23h e 8h com relógio simulado.
 - [ ] **VM6 — Validação final.** Aplicar a configuração na appliance, cadastrar usuários, testar com um navegador da intranet e validar a integração com o firewall da VM1. Confirmar com o professor o escopo do filtro por termo em HTTPS.
