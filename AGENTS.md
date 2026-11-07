@@ -37,3 +37,13 @@ As rotas da VM3 e da VM4 para B fazem o tráfego entre as duas sub-redes passar 
 - Aula 13 - 03112026 / RCII_Aula13 - Prática.pdf.txt: su - e ping. Usar somente as formas pertinentes à configuração e ao teste de rede.
 - Aula 03 - 25082026 / RCII_Aula3 - Prática.txt.txt, item 3(a): captura com Wireshark para conferir o IP de origem após o SNAT.
 - Antes de incluir qualquer comando, localizar sua forma no material do professor, inclusive para rodar os arquivos ou verificar o NAT. Adaptar apenas os parâmetros da topologia. Se faltar um comando documentado, registrar a pendência.
+
+## VM6 — plano do proxy Squid
+
+1. Aplicar VM6/rede.sh depois das redes da VM1 e da VM2. A VM6 usa 172.26.24.131/25, com gateway 172.26.24.129.
+2. Criar VM6/servicos.sh com a instalação do Squid. Seguir a prática da Aula 08 para instalar o pacote, editar /etc/squid/squid.conf e parar e iniciar o serviço depois da edição. Manter a porta 3128.
+3. Criar VM6/README.md com a sequência rede.sh, servicos.sh, edição manual e reinício. No squid.conf, manter as regras padrão de portas, aplicar os bloqueios antes da permissão geral e liberar apenas clientes autenticados das duas sub-redes internas. Encerrar com a negação dos demais acessos.
+4. Bloquear instagram.com, tiktok.com e facebook.com, incluindo subdomínios. Bloquear o termo “sexo” nas URLs HTTP. Dividir o bloqueio noturno em duas faixas, de 23h até a meia-noite e da meia-noite até 8h, pelo horário da VM6.
+5. Testar em um cliente configurado com o proxy 172.26.24.131:3128. Verificar credenciais válidas e inválidas, um site permitido em HTTP e HTTPS, os três domínios bloqueados, uma URL HTTP com o termo e o bloqueio dentro e fora do horário. Validar a integração com o firewall da VM1 na etapa da VM1.
+
+A instalação está em VM6/servicos.sh e o procedimento completo está em VM6/README.md. A prática da Aula 08 é a referência de instalação, edição e reinício. A documentação oficial do Squid complementa o cadastro de usuários e as ACLs, conforme autorizado para a VM6. A configuração passou nos testes em Debian 12 no Docker. Falta validar na appliance e com o firewall da VM1. Em HTTPS via CONNECT, o caminho e a consulta da URL ficam criptografados. Confirmar com o professor se o teste por palavra em HTTP atende ao requisito.
